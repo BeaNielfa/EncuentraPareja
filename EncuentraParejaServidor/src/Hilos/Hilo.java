@@ -6,6 +6,7 @@
 package Hilos;
 
 import Conexion.Conexion;
+import Datos.Firmas;
 import Datos.Usuario;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -45,18 +46,38 @@ public class Hilo extends Thread{
             
             boolean existe = false;
             boolean insertado  = false;
+            boolean verificado = true;
             int insert ;
             int op = recibir.readInt();
             Usuario u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(cliente), clavepri);
             switch(op){
                 case 0://REGISTRO
                         System.out.println("REGISTRO");
-                        insert = c.insertarUsuario(u);
-                        if(insert > 0){//SI SE HA INSERTADO EL USUARIO
-                            String id = c.obtenerId(u.getEmail());
-                            int insertR = c.insertarRol(Integer.parseInt(id), 2);//LE PONEMOS EL TIPO DE USUARIO 
-                            if(insertR>0){
-                                insertado = true;
+                        
+                        Firmas firmas = (Firmas) Utilidades.Util.recibirObjeto(cliente);
+                        String ap = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaA().getMensaje(), clavepri);
+                        String nom = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaN().getMensaje(), clavepri);
+                        String em = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaE().getMensaje(), clavepri);
+                        String pass = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaC().getMensaje(), clavepri);
+                        
+                        if(Utilidades.Util.verifica(ap, clientKey, firmas.getFirmaA().getFirma())
+                            && Utilidades.Util.verifica(nom, clientKey, firmas.getFirmaN().getFirma())
+                            && Utilidades.Util.verifica(em, clientKey, firmas.getFirmaE().getFirma())
+                            && Utilidades.Util.verifica(pass, clientKey, firmas.getFirmaC().getFirma())){
+                            System.out.println("FIRMA VERIFICADA");
+                        }else{
+                            System.out.println("NO VERIFICADA");
+                            verificado = false;
+                        }
+                        
+                        if(verificado){
+                            insert = c.insertarUsuario(u);
+                            if(insert > 0){//SI SE HA INSERTADO EL USUARIO
+                                String id = c.obtenerId(u.getEmail());
+                                int insertR = c.insertarRol(Integer.parseInt(id), 2);//LE PONEMOS EL TIPO DE USUARIO 
+                                if(insertR>0){
+                                    insertado = true;
+                                }
                             }
                         }
                         
