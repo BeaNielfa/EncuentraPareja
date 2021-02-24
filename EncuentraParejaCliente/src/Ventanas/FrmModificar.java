@@ -106,8 +106,10 @@ public class FrmModificar extends javax.swing.JFrame {
 
         jcbActivado.setText("Activado");
 
+        buttonGroup1.add(jrbUser);
         jrbUser.setText("User");
 
+        buttonGroup1.add(jrbAdmin);
         jrbAdmin.setText("Admin");
 
         btnAceptar.setText("Aceptar");

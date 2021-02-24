@@ -149,6 +149,12 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -186,8 +192,8 @@ public class FrmAdmin extends javax.swing.JFrame {
                     .addComponent(btnMod)
                     .addComponent(btnActivar)
                     .addComponent(btnEliminar))
-                .addGap(18, 18, 18)
-                .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -230,6 +236,8 @@ public class FrmAdmin extends javax.swing.JFrame {
 
             }
         } catch (IOException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnModActionPerformed
@@ -308,6 +316,21 @@ public class FrmAdmin extends javax.swing.JFrame {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(true);
+            dos.writeInt(3);//3 AÑADIR USUARIO
+            this.setVisible(false);
+            FrmAddUser fa = new FrmAddUser(servidor,claves, serverKey);
+            fa.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_btnAddActionPerformed
 
    
 
