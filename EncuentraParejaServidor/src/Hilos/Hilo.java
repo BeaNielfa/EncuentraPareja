@@ -44,12 +44,24 @@ public class Hilo extends Thread{
             DataInputStream recibir = new DataInputStream(cliente.getInputStream());
             
             boolean existe = false;
+            boolean insertado  = false;
+            int insert ;
             int op = recibir.readInt();
             Usuario u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(cliente), clavepri);
             switch(op){
-                case 0:
-                    System.out.println("REGISTRO");
-                    break;
+                case 0://REGISTRO
+                        System.out.println("REGISTRO");
+                        insert = c.insertarUsuario(u);
+                        if(insert > 0){//SI SE HA INSERTADO EL USUARIO
+                            String id = c.obtenerId(u.getEmail());
+                            int insertR = c.insertarRol(Integer.parseInt(id), 2);//LE PONEMOS EL TIPO DE USUARIO 
+                            if(insertR>0){
+                                insertado = true;
+                            }
+                        }
+                        
+                        enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
+                        break;
                 case 1:
                     System.out.println("INICIO SESION");
                     int existeU = c.obtener(u.getEmail(), u.getContraseña());//BUSCAMOS SI EL USUARIO EXISTE
@@ -114,8 +126,8 @@ public class Hilo extends Thread{
                                         case 3:
                                           u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             
-                                            int insert = c.insertarUsuario(u);
-                                            boolean insertado = false;
+                                            insert = c.insertarUsuario(u);
+                                            insertado = false;
                                             if(insert > 0){//SI SE HA INSERTADO EL USUARIO
                                                 String id = c.obtenerId(u.getEmail());
                                                 int tipoUser;

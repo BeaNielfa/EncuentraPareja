@@ -103,6 +103,11 @@ public class FrmLogin extends javax.swing.JFrame {
         btnRegistrarse.setBackground(new java.awt.Color(255, 255, 255));
         btnRegistrarse.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
         btnRegistrarse.setText("Registrarse");
+        btnRegistrarse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarseActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnRegistrarse, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 370, -1, -1));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/pareja.jpg"))); // NOI18N
@@ -171,6 +176,13 @@ public class FrmLogin extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        FrmRegistro fr = new FrmRegistro(servidor,claves, serverKey);
+        fr.setVisible(true);
+    }//GEN-LAST:event_btnRegistrarseActionPerformed
 
    
 
