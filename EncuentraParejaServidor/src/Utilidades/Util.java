@@ -5,7 +5,13 @@
  */
 package Utilidades;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -28,12 +34,6 @@ public class Util {
             hex+=h;
         }
         return hex;
-    }
-    
-    public static byte[] resumir(String txt) throws Exception{
-        MessageDigest md=MessageDigest.getInstance("SHA1");
-        md.update(txt.getBytes());
-        return md.digest();
     }
     
     public static byte[] firmar(String msg, PrivateKey clavePrivada) throws Exception {        
@@ -109,7 +109,41 @@ public class Util {
        
     }
 
+    
+        
+    
+    public static Object[] generarClaves() throws NoSuchAlgorithmException{
+        Object[] claves = new Object[2];
+        
+        KeyPairGenerator KeyGen = KeyPairGenerator.getInstance("RSA");
+        KeyGen.initialize(2048);
+        KeyPair par = KeyGen.generateKeyPair();
+        PrivateKey clavepriv = par.getPrivate();
+        PublicKey clavepubl = par.getPublic();
+        
+        claves[0] = clavepriv;
+        claves[1] = clavepubl;
+        
+        return claves;
+    }
    
+    
+    public static void enviarObject(Socket receptor, Object objeto){
+         try{
+             ObjectOutputStream oos = new ObjectOutputStream(receptor.getOutputStream());
+             oos.writeObject(objeto);
+             System.out.println("Objeto enviado.");
+         }catch(IOException e){
+             
+         }
+     }
+     
+     public static Object recibirObjeto(Socket receptor) throws IOException, ClassNotFoundException{
+        ObjectInputStream ois = new ObjectInputStream(receptor.getInputStream());
+        Object objeto = ois.readObject();
+        System.out.println("Objeto recibido");
+         return objeto;
+     }
     
 }
 
