@@ -7,6 +7,7 @@ package Hilos;
 
 import Conexion.Conexion;
 import Datos.Firmas;
+import Datos.Preferencias;
 import Datos.Usuario;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -82,6 +83,17 @@ public class Hilo extends Thread{
                         }
                         
                         enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
+                        
+                        String  e = recibir.readUTF();
+                        String idUsuario = c.obtenerId(e);
+                        
+                        Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
+                        
+                        int insertPreferencias = c.insertarPreferencia(idUsuario, p);
+                        
+                        if(insertPreferencias >0){
+                            enviar.writeBoolean(true);
+                        }
                         break;
                 case 1:
                     System.out.println("INICIO SESION");
