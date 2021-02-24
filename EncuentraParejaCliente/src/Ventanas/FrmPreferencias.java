@@ -285,7 +285,8 @@ public class FrmPreferencias extends javax.swing.JFrame {
             boolean insertado = dis.readBoolean();
             
             if(insertado){
-                JOptionPane.showMessageDialog(null, "Preferencias Insertadas", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Preferencias Insertadas, ahora debe esperar a ser activado por un Administrador", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
             }else{
                 JOptionPane.showMessageDialog(null, "Ha ocurrido algún error", "Informacion", JOptionPane.ERROR_MESSAGE);
             }
