@@ -5,6 +5,8 @@
  */
 package Ventanas;
 
+import Datos.Firma;
+import Datos.Firmas;
 import Datos.Usuario;
 import java.awt.Image;
 import java.io.DataInputStream;
@@ -12,6 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -186,12 +189,32 @@ public class FrmRegistro extends javax.swing.JFrame {
                 
                 enviar.writeInt(0);//REGISTRO
                 
+                //MANDAMOS EL USUARIO
                 Usuario u = new Usuario (txtNombre.getText(),txtApellidos.getText(), txtEmail.getText(),Utilidades.Util.resumen(txtPass.getText()));
                 Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
                 
+                //FIRMAMOS LOS DATOS DEL REGISTRO Y LOS CIFRAMOS PARA MANDARLOS
+                byte[] f = Utilidades.Util.firmar(txtNombre.getText(), (PrivateKey) claves[0]);
+                byte[] c = Utilidades.Util.cifrarAsimetrico(txtNombre.getText(), serverKey);
+                Firma firmaN = new Firma(f,c);
+                
+                byte[] fA = Utilidades.Util.firmar(txtApellidos.getText(), (PrivateKey) claves[0]);
+                byte[] cA = Utilidades.Util.cifrarAsimetrico(txtApellidos.getText(), serverKey);
+                Firma firmaA = new Firma(fA,cA);
+                
+                byte[] fE = Utilidades.Util.firmar(txtEmail.getText(), (PrivateKey) claves[0]);
+                byte[] cE = Utilidades.Util.cifrarAsimetrico(txtEmail.getText(), serverKey);
+                Firma firmaE = new Firma(fE,cE);
+                
+                byte[] fC = Utilidades.Util.firmar(txtPass.getText(), (PrivateKey) claves[0]);
+                byte[] cC = Utilidades.Util.cifrarAsimetrico(txtPass.getText(), serverKey);
+                Firma firmaC = new Firma(fC,cC);
+                
+                Firmas firma = new Firmas(firmaN, firmaA, firmaE, firmaC);
+                Utilidades.Util.enviarObject(servidor, firma);
+                
                 
                 boolean resultado = recibir.readBoolean();
-                
                 if(resultado){
                     JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente", "Sentencia SQL", JOptionPane.INFORMATION_MESSAGE);
                 }else{
