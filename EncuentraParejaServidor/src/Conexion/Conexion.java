@@ -267,6 +267,8 @@ public class Conexion {
             this.abrirConexion();
             String sentencia1 = "DELETE FROM ROLSASIGNADOS WHERE IDUSER = "+id;
             Sentencia_SQL.executeUpdate(sentencia1);
+            String borrarP = "DELETE FROM preferencias WHERE IDUSER = "+id;
+            Sentencia_SQL.executeUpdate(borrarP);
             String sentencia = "DELETE FROM USUARIOS WHERE ID = "+id;
             Sentencia_SQL.executeUpdate(sentencia);
             
