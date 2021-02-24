@@ -1,6 +1,7 @@
 package Conexion;
 
 
+import Datos.Preferencias;
 import Datos.Usuario;
 import java.sql.*;
 import java.util.ArrayList;
@@ -218,6 +219,31 @@ public class Conexion {
             this.abrirConexion();
             
             String Sentencia = "INSERT INTO rolsasignados (idUser, idRol) VALUES ("+idU+","+idR+ ")";
+            
+            
+            cont  =  Sentencia_SQL.executeUpdate(Sentencia);
+            
+            
+            
+            
+            this.cerrarConexion();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cont;
+        
+    }
+    
+    
+     //----------------------------------------------------------
+    public int insertarPreferencia(String idU, Preferencias p) {
+       int cont = 0;
+        try {
+            this.abrirConexion();
+            
+            String Sentencia = "INSERT INTO preferencias (idUser, relacion, deporte, politica, arte, hijos, interes) "
+                    + "VALUES ("+idU+", '"+p.getRelacion()+ "' ,"+p.getDeporte()+" , "+p.getPolitica()+" , "+p.getArte()+" , '"+p.getHijos()+"' , '"+p.getInteres()+"')";
             
             
             cont  =  Sentencia_SQL.executeUpdate(Sentencia);
