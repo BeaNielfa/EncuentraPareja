@@ -215,21 +215,21 @@ public class FrmAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         try{
-            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
-            dos.writeBoolean(true);
-            dos.writeInt(2);//2 MODIFICAR
+            
             int filaseleccionada = tabla.getSelectedRow();
             if (filaseleccionada == -1){
                JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
             } else {
 
+                DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                dos.writeBoolean(true);
+                dos.writeInt(2);//2 MODIFICAR
+                String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                //System.out.println(email+" Nombre");
 
-                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
-                    //System.out.println(email+" Nombre");
-                    
-                    this.setVisible(false);
-                    FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email);
-                    fm.setVisible(true);
+                this.setVisible(false);
+                FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email);
+                fm.setVisible(true);
                     
                      
                    
@@ -245,15 +245,16 @@ public class FrmAdmin extends javax.swing.JFrame {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
         try{
-            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
-            dos.writeBoolean(true);
-            dos.writeInt(1);//1 BORRAR
+            
             int filaseleccionada = tabla.getSelectedRow();
             if (filaseleccionada == -1){
                JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
             } else {
 
-
+                    DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                    dos.writeBoolean(true);
+                    dos.writeInt(1);//1 BORRAR
+                    
                     String nombre = (String)tabla.getValueAt(filaseleccionada, 2);
                     System.out.println(nombre+" Nombre");
 
@@ -277,15 +278,15 @@ public class FrmAdmin extends javax.swing.JFrame {
     private void btnActivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActivarActionPerformed
         // TODO add your handling code here:
         try{
-            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
-            dos.writeBoolean(true);
-            dos.writeInt(0);//0 ACTIVAR
+            
              int filaseleccionada = tabla.getSelectedRow();
              if (filaseleccionada == -1){
                 JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
             } else {
 
-
+                    DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                    dos.writeBoolean(true);
+                    dos.writeInt(0);//0 ACTIVAR
                     String nombre = (String)tabla.getValueAt(filaseleccionada, 2);
                     System.out.println(nombre+" Nombre");
 
