@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SealedObject;
@@ -56,6 +57,94 @@ public class Hilo extends Thread{
                         existe = true;
                     }
                     enviar.writeBoolean(existe);
+                    
+                    if(existe){
+                            String tipo = c.obtenerTipoUser(u.getEmail());//OBTENEMOS EL TIPO DE USUARIO 
+                            enviar.writeUTF(tipo);
+                            int activado = c.isActivado(u.getEmail());
+                            enviar.writeInt(activado);
+                           
+                            if(tipo.equals("Admin")){
+                               
+                               
+                               
+                               ArrayList lu = new ArrayList();
+                               lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                               //ENVIAMOS LA LISTA DE USUARIOS
+                               Utilidades.Util.enviarObject(cliente, lu);
+                               
+                                
+                               while(recibir.readBoolean()){
+                                    int opc = recibir.readInt();
+                                    String email ="";
+                                    switch (opc){
+                                        case 0://ACTIVAR USUARIO
+                                            
+                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE ACTIVAR
+                                            c.activarUsuario(email);
+                                            
+                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            
+                                            //ENVIAMOS LA LISTA DE USUARIOS
+                                            Utilidades.Util.enviarObject(cliente, lu);
+                                            break;
+                                        case 1://DAR DE BAJA UN USUARIO (ELIMINAR)
+                                            
+                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
+                                            c.eliminarUsuario(email);
+                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            //ENVIAMOS LA LISTA DE USUARIOS
+                                            Utilidades.Util.enviarObject(cliente, lu);
+                                            break;
+                                        case 2://MODIFICAR UN USUARIO
+                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
+                                            Usuario us = c.cogerUsuario(email);//RECOGEMOS SUS DATOS
+                                                                                        
+                                            Utilidades.Util.enviarObject(cliente, us);
+                                            us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
+                                           
+                                            //ACTUALIZAMOS EL USUARIO EN LA BBDD
+                                            c.actualizarUsuario(us);
+                                            //Volvemos a instanciar oos para que pierda la cabecera
+                                           
+                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            //ENVIAMOS LA LISTA DE USUARIOS
+                                            Utilidades.Util.enviarObject(cliente, lu);
+                                            break;
+                                        case 3:
+                                          u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(cliente), clavepri);
+                                            
+                                            int insert = c.insertarUsuario(u);
+                                            boolean insertado = false;
+                                            if(insert > 0){//SI SE HA INSERTADO EL USUARIO
+                                                String id = c.obtenerId(u.getEmail());
+                                                int tipoUser;
+                                                if(u.getTipoUser().equals("Admin")){
+                                                    tipoUser = 1;
+                                                }else{
+                                                    tipoUser = 2;
+                                                }
+                                                int insertR = c.insertarRol(Integer.parseInt(id), tipoUser);//LE PONEMOS EL TIPO DE USUARIO 
+                                                if(insertR>0){
+                                                    insertado = true;
+                                                }
+                                            }
+
+                                            enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
+                                            
+                                            
+                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            //ENVIAMOS LA LISTA DE USUARIOS
+                                            Utilidades.Util.enviarObject(cliente, lu);
+                                            break;
+                                    }
+                                    
+                                    
+                               }
+                               
+                            }
+                            
+                        }
                     break;
                         
             }

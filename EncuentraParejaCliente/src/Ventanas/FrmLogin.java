@@ -17,6 +17,7 @@ import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -136,9 +137,29 @@ public class FrmLogin extends javax.swing.JFrame {
             Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
             boolean existe = dis.readBoolean();
             if(existe){
-                System.out.println("EXISTE");
+                String tipo = dis.readUTF();
+                int acti = dis.readInt();
+               
+                
+                if(acti == 0){
+               
+                    
+                    JOptionPane.showMessageDialog(null, "Su cuenta está Desactivada","Login", JOptionPane.ERROR_MESSAGE);
+                }else if(tipo.equals("Admin")){
+               
+                    
+                    this.setVisible(false);
+                    FrmAdmin fa = new FrmAdmin(servidor,claves, serverKey);
+                    fa.setVisible(true);
+                }else{
+                    System.out.println("USUARIO NORMAL ACCEDIENDO");
+                    /*this.setVisible(false);
+                    FrmPreferencias fp = new FrmPreferencias();
+                    fp.setVisible(true);*/   
+                }
+                
             }else{
-                System.out.println("NO EXISTE");
+                JOptionPane.showMessageDialog(null, "Ha ocurrido algun error", "Sentencia SQL", JOptionPane.ERROR_MESSAGE);
             }
             
         } catch (IOException ex) {
