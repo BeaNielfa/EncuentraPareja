@@ -207,6 +207,31 @@ public class FrmAdmin extends javax.swing.JFrame {
 
     private void btnModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModActionPerformed
         // TODO add your handling code here:
+        
+        try{
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(true);
+            dos.writeInt(2);//2 MODIFICAR
+            int filaseleccionada = tabla.getSelectedRow();
+            if (filaseleccionada == -1){
+               JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
+            } else {
+
+
+                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                    //System.out.println(email+" Nombre");
+                    
+                    this.setVisible(false);
+                    FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email);
+                    fm.setVisible(true);
+                    
+                     
+                   
+
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnModActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
