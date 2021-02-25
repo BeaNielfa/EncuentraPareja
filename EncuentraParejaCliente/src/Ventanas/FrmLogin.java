@@ -136,35 +136,39 @@ public class FrmLogin extends javax.swing.JFrame {
             // TODO add your handling code here:
             DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
             DataInputStream dis = new DataInputStream(servidor.getInputStream());
-            dos.writeInt(1);
-            
-            Usuario u =new Usuario(txtEmail.getText(),Utilidades.Util.resumen(txtPass.getText()));
-            Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
-            boolean existe = dis.readBoolean();
-            if(existe){
-                String tipo = dis.readUTF();
-                int acti = dis.readInt();
-               
-                
-                if(acti == 0){
-               
-                    
-                    JOptionPane.showMessageDialog(null, "Su cuenta está Desactivada","Login", JOptionPane.ERROR_MESSAGE);
-                }else if(tipo.equals("Admin")){
-               
-                    
-                    this.setVisible(false);
-                    FrmAdmin fa = new FrmAdmin(servidor,claves, serverKey);
-                    fa.setVisible(true);
-                }else{
-                    System.out.println("USUARIO NORMAL ACCEDIENDO");
-                    /*this.setVisible(false);
-                    FrmPreferencias fp = new FrmPreferencias();
-                    fp.setVisible(true);*/   
-                }
-                
+            if(txtEmail.getText().equals("")|| txtPass.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Faltan campos por rellenar","Login", JOptionPane.ERROR_MESSAGE);
             }else{
-                JOptionPane.showMessageDialog(null, "Ha ocurrido algun error", "Sentencia SQL", JOptionPane.ERROR_MESSAGE);
+                dos.writeInt(1);
+
+                Usuario u =new Usuario(txtEmail.getText(),Utilidades.Util.resumen(txtPass.getText()));
+                Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
+                boolean existe = dis.readBoolean();
+                if(existe){
+                    String tipo = dis.readUTF();
+                    int acti = dis.readInt();
+
+
+                    if(acti == 0){
+
+
+                        JOptionPane.showMessageDialog(null, "Su cuenta está Desactivada","Login", JOptionPane.ERROR_MESSAGE);
+                    }else if(tipo.equals("Admin")){
+
+
+                        this.setVisible(false);
+                        FrmAdmin fa = new FrmAdmin(servidor,claves, serverKey);
+                        fa.setVisible(true);
+                    }else{
+                        System.out.println("USUARIO NORMAL ACCEDIENDO");
+                        /*this.setVisible(false);
+                        FrmPreferencias fp = new FrmPreferencias();
+                        fp.setVisible(true);*/   
+                    }
+
+                }else{
+                    JOptionPane.showMessageDialog(null, "Ha ocurrido algun error", "Sentencia SQL", JOptionPane.ERROR_MESSAGE);
+                }
             }
             
         } catch (IOException ex) {
