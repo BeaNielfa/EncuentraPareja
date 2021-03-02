@@ -304,16 +304,14 @@ public class Conexion {
         try {
             this.abrirConexion();
             
-            String sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado, tiporol.descripcion "
-                    + "FROM rolsasignados, tiporol, usuarios "
-                    + "WHERE usuarios.id = rolsasignados.idUser "
-                    + "AND rolsasignados.idRol = tiporol.id "
-                    + "AND usuarios.email = '"+email+"'";
+            String sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email "
+                    + "FROM usuarios "
+                    + "WHERE  usuarios.email = '"+email+"'";
             
             
             Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
             Conj_Registros.first();
-            u = new Usuario (Conj_Registros.getString(1),Conj_Registros.getString(2),Conj_Registros.getString(3),Conj_Registros.getInt(4),Conj_Registros.getString(5));
+            u = new Usuario (Conj_Registros.getString(1),Conj_Registros.getString(2),Conj_Registros.getString(3));
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }

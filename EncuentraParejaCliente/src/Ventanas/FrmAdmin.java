@@ -51,6 +51,12 @@ public class FrmAdmin extends javax.swing.JFrame {
         Icon icono = new ImageIcon(fot.getScaledInstance(btnAdd.getWidth(), btnAdd.getHeight(), Image.SCALE_DEFAULT));
         btnAdd.setIcon(icono);
         
+        
+        Image priv = new ImageIcon(getClass().getResource("/Imagenes/cambiar.jpg")).getImage();
+        Icon icono1 = new ImageIcon(priv.getScaledInstance(btnPrivilegios.getWidth(), btnPrivilegios.getHeight(), Image.SCALE_DEFAULT));
+        btnPrivilegios.setIcon(icono1);
+        
+        
         ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
         
         
@@ -100,6 +106,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnActivar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
+        btnPrivilegios = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -155,6 +162,13 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnPrivilegios.setBackground(new java.awt.Color(255, 255, 255));
+        btnPrivilegios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrivilegiosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -165,20 +179,21 @@ public class FrmAdmin extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(103, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnMod)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEliminar)
-                                .addGap(113, 113, 113)
-                                .addComponent(btnActivar))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(90, 90, 90))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnMod)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEliminar)
+                        .addGap(113, 113, 113)
+                        .addComponent(btnActivar))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(90, 90, 90))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(btnPrivilegios, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,7 +208,9 @@ public class FrmAdmin extends javax.swing.JFrame {
                     .addComponent(btnActivar)
                     .addComponent(btnEliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -333,6 +350,19 @@ public class FrmAdmin extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_btnAddActionPerformed
 
+    private void btnPrivilegiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrivilegiosActionPerformed
+        // TODO add your handling code here:
+        int filaseleccionada = tabla.getSelectedRow();
+        if (filaseleccionada == -1){
+           JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
+        } else {
+            String tipo = (String)tabla.getValueAt(filaseleccionada, 4);
+            if(tipo.equals("User")){
+                JOptionPane.showMessageDialog(null, "Sólo se pueden cambiar los privilegios a Administradores");
+            }
+        }
+    }//GEN-LAST:event_btnPrivilegiosActionPerformed
+
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -340,6 +370,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnMod;
+    private javax.swing.JButton btnPrivilegios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
