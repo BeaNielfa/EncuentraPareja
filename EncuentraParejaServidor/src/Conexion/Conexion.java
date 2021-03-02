@@ -282,14 +282,15 @@ public class Conexion {
         }
     }
     //----------------------------------------------------------
-    public ArrayList obtenerUsuariosTablaArrayList() {
+    public ArrayList obtenerUsuariosTablaArrayList(String id) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
         try {
             String Sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado,tiporol.descripcion "
                     + "from rolsasignados, tiporol, usuarios" +
                     " WHERE usuarios.id = rolsasignados.idUser "
-                    + "AND rolsasignados.idRol = tiporol.id";
+                    + "AND rolsasignados.idRol = tiporol.id "
+                    + "AND usuarios.id <> "+id;;
             Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
             while (Conj_Registros.next()) {
                 lp.add(new Usuario(Conj_Registros.getString(1), Conj_Registros.getString(2), Conj_Registros.getString(3), Conj_Registros.getInt(4), Conj_Registros.getString(5)));

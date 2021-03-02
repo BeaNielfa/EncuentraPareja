@@ -123,7 +123,7 @@ public class Hilo extends Thread {
                             if (tipo.equals("Admin")) {
 
                                 ArrayList lu = new ArrayList();
-                                lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                 //ENVIAMOS LA LISTA DE USUARIOS
                                 Utilidades.Util.enviarObject(cliente, lu);
 
@@ -138,7 +138,7 @@ public class Hilo extends Thread {
                                             c.activarUsuario(email, activado);
 
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -147,7 +147,7 @@ public class Hilo extends Thread {
                                             email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
                                             c.eliminarUsuario(email);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -165,7 +165,7 @@ public class Hilo extends Thread {
                                             c.actualizarUsuario(us);
 
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -193,7 +193,7 @@ public class Hilo extends Thread {
                                             enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
 
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList();//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
