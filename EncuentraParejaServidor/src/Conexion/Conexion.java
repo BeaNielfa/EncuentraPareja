@@ -106,24 +106,22 @@ public class Conexion {
         }
     }
     
-    public void actualizarUsuario (Usuario usuario){
+    public void actualizarUsuario (Usuario usuario, String email){
         try {
             //PRIMERO OBTENEMOS EL ID DE ESE USUARIO
-            String id = obtenerId(usuario.getEmail());
+            String id = obtenerId(email);
             int tipo ;
             this.abrirConexion();
-            if(usuario.getTipoUser().equals("User")){
-                tipo = 2;
-            }else{
-                tipo = 1;
-            }
-            String update = "UPDATE rolsasignados SET idRol ="+tipo+" WHERE idUser = "+id;
-            Sentencia_SQL.executeUpdate(update);
+            
             String update1 = "UPDATE USUARIOS SET NOMBRE = '"+usuario.getNombre()+"' , "
                     + "APELLIDOS = '"+usuario.getApellidos()+"' , "
-                    
-                    + "ACTIVADO = "+usuario.getActivado()+" WHERE ID = "+id;
+                    +"EMAIL = '"+usuario.getEmail()+"' WHERE ID = "+id;
+            
+            
             Sentencia_SQL.executeUpdate(update1);
+            
+            
+            this.cerrarConexion();
                     
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);

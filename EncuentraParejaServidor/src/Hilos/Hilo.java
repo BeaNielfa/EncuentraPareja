@@ -162,7 +162,7 @@ public class Hilo extends Thread {
                                             us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
 
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
-                                            c.actualizarUsuario(us);
+                                            c.actualizarUsuario(us, email);
 
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
