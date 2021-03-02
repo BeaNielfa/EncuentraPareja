@@ -52,18 +52,8 @@ public class FrmModificar extends javax.swing.JFrame {
 
         txtNombre.setText(u.getNombre());
         txtApellidos.setText(u.getApellidos());
-
-        if(u.getActivado() == 1){
-            jcbActivado.setSelected(true);
-        }else{
-            jcbActivado.setSelected(false);
-        }
-
-        if(u.getTipoUser().equals("Admin")){
-            jrbAdmin.setSelected(true);
-        }else{
-            jrbUser.setSelected(true);
-        }
+        txtEmail.setText(u.getEmail());
+        
         
     }
 
@@ -80,15 +70,14 @@ public class FrmModificar extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtApellidos = new javax.swing.JTextField();
-        jcbActivado = new javax.swing.JCheckBox();
-        jrbUser = new javax.swing.JRadioButton();
-        jrbAdmin = new javax.swing.JRadioButton();
         btnAceptar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        btnFoto = new javax.swing.JButton();
+        lblFoto = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -100,18 +89,6 @@ public class FrmModificar extends javax.swing.JFrame {
 
         jLabel2.setText("Apellidos:");
 
-        jLabel3.setText("Activado:");
-
-        jLabel4.setText("Tipo de Usuario:");
-
-        jcbActivado.setText("Activado");
-
-        buttonGroup1.add(jrbUser);
-        jrbUser.setText("User");
-
-        buttonGroup1.add(jrbAdmin);
-        jrbAdmin.setText("Admin");
-
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,33 +99,32 @@ public class FrmModificar extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel5.setText("Modificación");
 
+        jLabel6.setText("Email:");
+
+        btnFoto.setText("Elegir Foto");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel6)
+                    .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFoto)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel5)
+                        .addComponent(txtNombre)
+                        .addComponent(txtApellidos, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                        .addComponent(txtEmail))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(181, 181, 181)
-                        .addComponent(btnAceptar))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(68, 68, 68)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jrbUser)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jrbAdmin))
-                                .addComponent(jcbActivado)
-                                .addComponent(txtNombre)
-                                .addComponent(txtApellidos, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))))
+                        .addGap(26, 26, 26)
+                        .addComponent(btnAceptar)))
                 .addContainerGap(113, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -165,18 +141,17 @@ public class FrmModificar extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jcbActivado))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jrbUser)
-                        .addComponent(jrbAdmin)))
-                .addGap(51, 51, 51)
-                .addComponent(btnAceptar)
-                .addContainerGap(64, Short.MAX_VALUE))
+                    .addComponent(jLabel6)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnFoto)
+                        .addGap(41, 41, 41)
+                        .addComponent(btnAceptar))
+                    .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -202,19 +177,9 @@ public class FrmModificar extends javax.swing.JFrame {
             // TODO add your handling code here:
             String nombre = (txtNombre.getText());
             String apellidos = (txtApellidos.getText());
-            int activado;
-            String tipo ="";
-            if(jcbActivado.isSelected()){
-                activado =(1);
-            }else{
-                activado = (0);
-            }  
-            if(jrbUser.isSelected()){
-                tipo = ("User");
-            }else{
-                tipo = ("Admin");
-            } 
-            Usuario u = new Usuario (nombre,apellidos,email,activado,tipo);
+            String em = txtEmail.getText();
+            
+            Usuario u = new Usuario(nombre, apellidos, em);
             Utilidades.Util.enviarObject(servidor, u);
             
             
@@ -232,17 +197,16 @@ public class FrmModificar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JButton btnFoto;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JCheckBox jcbActivado;
-    private javax.swing.JRadioButton jrbAdmin;
-    private javax.swing.JRadioButton jrbUser;
+    private javax.swing.JLabel lblFoto;
     private javax.swing.JTextField txtApellidos;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

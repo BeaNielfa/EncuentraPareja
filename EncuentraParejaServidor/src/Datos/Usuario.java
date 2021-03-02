@@ -12,18 +12,29 @@ import java.io.Serializable;
  * @author beani
  */
 public class Usuario implements Serializable{
-   private String nombre;
+    private String nombre;
    private String apellidos;
    private String email;
    private String contraseña;
    private int activado;
    private String tipoUser;
+   private String foto;
 
+   //CONSTRUCTOR QUE UTILIZO PARA EL LOGIN
     public Usuario (String email, String contraseña){
         this.email = email;
         this.contraseña = contraseña;
     }
+    
+    //CONSTRUCTOR QUE UTILIZO PARA MODIFICAR UN USUARIO
+    public Usuario (String nombre, String apellidos, String email){
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.email = email;
+        //this.foto = foto;
+    }
    
+   //CONSTRUZTOR QUE UTILIZO PARA MOSTRAR LA LISTA DE USUARIOS
     public Usuario(String nombre, String apellidos, String email, int activado, String tipo) {
        this.nombre = nombre;
        this.apellidos = apellidos;
@@ -32,14 +43,16 @@ public class Usuario implements Serializable{
        this.tipoUser = tipo;
     }
    
-    public Usuario(String nombre, String apellidos, String email, String contraseña) {
+    //CONSTRUCTOR QUE SE USA CUANDO SE REGISTRA A UN USUARIO NUEVO
+    public Usuario(String nombre, String apellidos, String email, String contraseña,int activado) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.contraseña = contraseña;
-        this.activado = 0;
+        this.activado = activado;
     }
 
+    //CONSTRUCTOR QUE UTILIZO PARA AÑADIR UN USUARIO DESDE LOS ADMINISTRADORES
     public Usuario(String nombre, String apellidos, String email,String contraseña, int activado, String tipo) {
        this.nombre = nombre;
        this.apellidos = apellidos;
@@ -47,6 +60,13 @@ public class Usuario implements Serializable{
        this.contraseña = contraseña;
        this.activado = activado;
        this.tipoUser = tipo;
+    }
+
+    public Usuario(String nombre, String apellidos, String em, String archivoFoto) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.email = em;
+        this.foto = archivoFoto;
     }
 
     public String getNombre() {
@@ -96,6 +116,13 @@ public class Usuario implements Serializable{
     public void setTipoUser(String tipoUser) {
         this.tipoUser = tipoUser;
     }
-   
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
    
 }

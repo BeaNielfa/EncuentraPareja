@@ -90,11 +90,15 @@ public class Conexion {
         return id;
     }
     
-    public void activarUsuario(String email){
+    public void activarUsuario(String email, int activado){
         try {
             this.abrirConexion();
-            
-            String sentencia = "UPDATE usuarios SET activado = 1 WHERE email ='"+email+"'";
+            if(activado == 0){
+                activado = 1;
+            }else{
+                activado = 0;
+            }
+            String sentencia = "UPDATE usuarios SET activado = "+activado+" WHERE email ='"+email+"'";
             Sentencia_SQL.executeUpdate(sentencia);
             this.cerrarConexion();
         } catch (SQLException ex) {
@@ -102,24 +106,22 @@ public class Conexion {
         }
     }
     
-    public void actualizarUsuario (Usuario usuario){
+    public void actualizarUsuario (Usuario usuario, String email){
         try {
             //PRIMERO OBTENEMOS EL ID DE ESE USUARIO
-            String id = obtenerId(usuario.getEmail());
+            String id = obtenerId(email);
             int tipo ;
             this.abrirConexion();
-            if(usuario.getTipoUser().equals("User")){
-                tipo = 2;
-            }else{
-                tipo = 1;
-            }
-            String update = "UPDATE rolsasignados SET idRol ="+tipo+" WHERE idUser = "+id;
-            Sentencia_SQL.executeUpdate(update);
+            
             String update1 = "UPDATE USUARIOS SET NOMBRE = '"+usuario.getNombre()+"' , "
                     + "APELLIDOS = '"+usuario.getApellidos()+"' , "
-                    
-                    + "ACTIVADO = "+usuario.getActivado()+" WHERE ID = "+id;
+                    +"EMAIL = '"+usuario.getEmail()+"' WHERE ID = "+id;
+            
+            
             Sentencia_SQL.executeUpdate(update1);
+            
+            
+            this.cerrarConexion();
                     
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
@@ -278,14 +280,15 @@ public class Conexion {
         }
     }
     //----------------------------------------------------------
-    public ArrayList obtenerUsuariosTablaArrayList() {
+    public ArrayList obtenerUsuariosTablaArrayList(String id) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
         try {
             String Sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado,tiporol.descripcion "
                     + "from rolsasignados, tiporol, usuarios" +
                     " WHERE usuarios.id = rolsasignados.idUser "
-                    + "AND rolsasignados.idRol = tiporol.id";
+                    + "AND rolsasignados.idRol = tiporol.id "
+                    + "AND usuarios.id <> "+id;;
             Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
             while (Conj_Registros.next()) {
                 lp.add(new Usuario(Conj_Registros.getString(1), Conj_Registros.getString(2), Conj_Registros.getString(3), Conj_Registros.getInt(4), Conj_Registros.getString(5)));
@@ -301,16 +304,14 @@ public class Conexion {
         try {
             this.abrirConexion();
             
-            String sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado, tiporol.descripcion "
-                    + "FROM rolsasignados, tiporol, usuarios "
-                    + "WHERE usuarios.id = rolsasignados.idUser "
-                    + "AND rolsasignados.idRol = tiporol.id "
-                    + "AND usuarios.email = '"+email+"'";
+            String sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email "
+                    + "FROM usuarios "
+                    + "WHERE  usuarios.email = '"+email+"'";
             
             
             Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
             Conj_Registros.first();
-            u = new Usuario (Conj_Registros.getString(1),Conj_Registros.getString(2),Conj_Registros.getString(3),Conj_Registros.getInt(4),Conj_Registros.getString(5));
+            u = new Usuario (Conj_Registros.getString(1),Conj_Registros.getString(2),Conj_Registros.getString(3));
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }

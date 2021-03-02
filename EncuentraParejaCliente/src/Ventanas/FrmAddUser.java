@@ -53,7 +53,6 @@ public class FrmAddUser extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -61,14 +60,11 @@ public class FrmAddUser extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtApellidos = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         txtPass = new javax.swing.JPasswordField();
         jcbActivado = new javax.swing.JCheckBox();
-        jrbUser = new javax.swing.JRadioButton();
-        jrbAdmin = new javax.swing.JRadioButton();
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -78,7 +74,7 @@ public class FrmAddUser extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(204, 153, 255));
 
         jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
-        jLabel1.setText("Añadir Usuario");
+        jLabel1.setText("Añadir Administrador");
 
         jLabel2.setText("Nombre:");
 
@@ -90,15 +86,7 @@ public class FrmAddUser extends javax.swing.JFrame {
 
         jLabel6.setText("Activado:");
 
-        jLabel7.setText("Tipo:");
-
         jcbActivado.setText("Activado");
-
-        buttonGroup1.add(jrbUser);
-        jrbUser.setText("User");
-
-        buttonGroup1.add(jrbAdmin);
-        jrbAdmin.setText("Admin");
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -118,8 +106,7 @@ public class FrmAddUser extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel6))
                 .addGap(59, 59, 59)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -130,11 +117,8 @@ public class FrmAddUser extends javax.swing.JFrame {
                         .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
                     .addComponent(jcbActivado)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jrbUser)
-                        .addGap(31, 31, 31)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAceptar)
-                            .addComponent(jrbAdmin))))
+                        .addGap(78, 78, 78)
+                        .addComponent(btnAceptar)))
                 .addContainerGap(106, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -162,12 +146,7 @@ public class FrmAddUser extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jcbActivado))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jrbUser)
-                    .addComponent(jrbAdmin))
-                .addGap(32, 32, 32)
+                .addGap(73, 73, 73)
                 .addComponent(btnAceptar)
                 .addContainerGap(41, Short.MAX_VALUE))
         );
@@ -194,9 +173,6 @@ public class FrmAddUser extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Tienes que rellenar todos los campos", 
             "Faltan campos", JOptionPane.ERROR_MESSAGE);
         
-        }else if(!jrbUser.isSelected() && !jrbAdmin.isSelected()){
-            JOptionPane.showMessageDialog(null, "Tienes que elegir un tipo de usuario", 
-            "Faltan campos", JOptionPane.ERROR_MESSAGE);
         }else{
             
                 
@@ -209,12 +185,8 @@ public class FrmAddUser extends javax.swing.JFrame {
                 }else{
                     activado = 0;
                 }
-                String tipo;
-                if(jrbUser.isSelected()){
-                    tipo ="User";   
-                }else{
-                    tipo = "Admin";
-                }
+                String tipo ="Admin";
+                
                 Usuario u = new Usuario (txtNombre.getText(),txtApellidos.getText(), txtEmail.getText(),Utilidades.Util.resumen(txtPass.getText()),activado,tipo);
                 Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
                 boolean resultado = recibir.readBoolean();
@@ -244,18 +216,14 @@ public class FrmAddUser extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JCheckBox jcbActivado;
-    private javax.swing.JRadioButton jrbAdmin;
-    private javax.swing.JRadioButton jrbUser;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
