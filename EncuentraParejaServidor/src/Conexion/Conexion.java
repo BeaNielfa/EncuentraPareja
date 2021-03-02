@@ -90,11 +90,15 @@ public class Conexion {
         return id;
     }
     
-    public void activarUsuario(String email){
+    public void activarUsuario(String email, int activado){
         try {
             this.abrirConexion();
-            
-            String sentencia = "UPDATE usuarios SET activado = 1 WHERE email ='"+email+"'";
+            if(activado == 0){
+                activado = 1;
+            }else{
+                activado = 0;
+            }
+            String sentencia = "UPDATE usuarios SET activado = "+activado+" WHERE email ='"+email+"'";
             Sentencia_SQL.executeUpdate(sentencia);
             this.cerrarConexion();
         } catch (SQLException ex) {
