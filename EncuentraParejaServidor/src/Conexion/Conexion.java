@@ -2,6 +2,7 @@ package Conexion;
 
 
 import Datos.Preferencias;
+import Datos.Privilegios;
 import Datos.Usuario;
 import java.sql.*;
 import java.util.ArrayList;
@@ -129,12 +130,11 @@ public class Conexion {
     }
     
     //----------------------------------------------------------
-    public String obtenerTipoUser(String email){
+    public String obtenerTipoUser(String id){
         
             
         String tipo = "";
-        //PRIMERO OBTENEMOS EL ID DE ESE USUARIO 
-        String id = obtenerId(email);
+        
 
         this.abrirConexion();
         //CONSULTA QUE DEVUELVE SI UN USUARIO ES ADMIN O USER
@@ -156,12 +156,11 @@ public class Conexion {
     }
 
     //----------------------------------------------------------
-    public int isActivado(String email){
+    public int isActivado(String id){
         
             
         int tipo = 0;
-        //PRIMERO OBTENEMOS EL ID DE ESE USUARIO 
-        String id = obtenerId(email);
+        
 
         this.abrirConexion();
         //CONSULTA QUE DEVUELVE SI UN USUARIO ES ADMIN O USER
@@ -271,6 +270,8 @@ public class Conexion {
             Sentencia_SQL.executeUpdate(sentencia1);
             String borrarP = "DELETE FROM preferencias WHERE IDUSER = "+id;
             Sentencia_SQL.executeUpdate(borrarP);
+            String borrarPr = "DELETE FROM privilegios WHERE IDUSER = "+id;
+            Sentencia_SQL.executeUpdate(borrarPr);
             String sentencia = "DELETE FROM USUARIOS WHERE ID = "+id;
             Sentencia_SQL.executeUpdate(sentencia);
             
@@ -318,6 +319,73 @@ public class Conexion {
         return u;
         
     }
+     public void actualizarPrivilegios (Privilegios p, String id){
+        try {
+            
+            this.abrirConexion();
+            
+            String update1 = "UPDATE privilegios SET ACTIVAR = "+p.getActivar()+" , "
+                    + "MODIFICAR = "+p.getModificar()+" , "
+                    +"ALTA = "+p.getAlta()+" , "+
+                    "BAJA = "+p.getBaja()+" , "+
+                    "PRIVILEGIOS ="+ p.getPrivilegios()+" WHERE idUser = "+id;
+            
+            
+            Sentencia_SQL.executeUpdate(update1);
+            
+            
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
+     //----------------------------------------------------------
+    public int insertarPrivilegios(String id) {
+       int cont = 0;
+        try {
+            this.abrirConexion();
+            
+            String Sentencia = "INSERT INTO privilegios (idUser, activar, modificar, alta, baja, privilegios) "
+                    + "VALUES ("+id+" , "+1+" , "+0+" , "+0+" , "+0+" , "+0+")";
+            
+            
+            cont  =  Sentencia_SQL.executeUpdate(Sentencia);
+            
+            
+            
+            
+            this.cerrarConexion();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cont;
+        
+    }
+    
+     public Privilegios cogerPrivilegios (String id){
+        Privilegios u = null;
+        try {
+            this.abrirConexion();
+            
+            String sentencia = "SELECT activar, modificar, alta, baja, privilegios "
+                    + "FROM privilegios "
+                    + "WHERE  idUser = "+id+"";
+            
+            
+            Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
+            Conj_Registros.first();
+            u = new Privilegios (Conj_Registros.getInt(1),Conj_Registros.getInt(2),Conj_Registros.getInt(3),Conj_Registros.getInt(4),Conj_Registros.getInt(5));
+            
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return u;
+        
+    }
+    
     //---------------------------------------------------------
     public void cerrarConexion() {
         try {

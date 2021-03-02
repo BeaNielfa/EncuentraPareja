@@ -147,7 +147,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 if(existe){
                     String tipo = dis.readUTF();
                     int acti = dis.readInt();
-
+                    String idUser = dis.readUTF();
 
                     if(acti == 0){
 
@@ -157,13 +157,11 @@ public class FrmLogin extends javax.swing.JFrame {
 
 
                         this.setVisible(false);
-                        FrmAdmin fa = new FrmAdmin(servidor,claves, serverKey);
+                        FrmAdmin fa = new FrmAdmin(servidor,claves, serverKey,idUser);
                         fa.setVisible(true);
                     }else{
                         System.out.println("USUARIO NORMAL ACCEDIENDO");
-                        /*this.setVisible(false);
-                        FrmPreferencias fp = new FrmPreferencias();
-                        fp.setVisible(true);*/   
+                       
                     }
 
                 }else{

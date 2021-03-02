@@ -26,16 +26,17 @@ public class FrmAddUser extends javax.swing.JFrame {
     private Socket servidor;
     private PublicKey serverKey;
     private Object[] claves;
+    private String id;
     
     /**
      * Creates new form FrmAddUser
      */
-    public FrmAddUser(Socket servidor, Object[] claves, PublicKey serverKey) {
+    public FrmAddUser(Socket servidor, Object[] claves, PublicKey serverKey, String id) {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
-        
+        this.id = id;
         //Centra la ventana en el monitor
         setLocationRelativeTo(null);
         
@@ -196,7 +197,7 @@ public class FrmAddUser extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Ha ocurrido algun error", "Sentencia SQL", JOptionPane.ERROR_MESSAGE);
                 }
                 this.setVisible(false);
-                FrmAdmin f = new FrmAdmin (servidor,claves,serverKey);
+                FrmAdmin f = new FrmAdmin (servidor,claves,serverKey,id);
                 f.setVisible(true);
             } catch (IOException ex) {
                 Logger.getLogger(FrmAddUser.class.getName()).log(Level.SEVERE, null, ex);

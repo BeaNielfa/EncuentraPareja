@@ -25,16 +25,18 @@ public class FrmModificar extends javax.swing.JFrame {
     private PublicKey serverKey;
     private Object[] claves;
     private String email;
+    private String id;
     
     /**
      * Creates new form FrmModificar
      */
-    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey, String email) throws IOException, ClassNotFoundException {
+    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey, String email, String id) throws IOException, ClassNotFoundException {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
         this.email  = email;
+        this.id = id;
         
         //Centra la ventana en el monitor
         setLocationRelativeTo(null);
@@ -184,7 +186,7 @@ public class FrmModificar extends javax.swing.JFrame {
             
             
             this.setVisible(false);
-            FrmAdmin f = new FrmAdmin(servidor, claves, serverKey);
+            FrmAdmin f = new FrmAdmin(servidor, claves, serverKey,id);
             f.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
