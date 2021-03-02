@@ -116,7 +116,7 @@ public class Util {
         Object[] claves = new Object[2];
         
         KeyPairGenerator KeyGen = KeyPairGenerator.getInstance("RSA");
-        KeyGen.initialize(2048);
+        KeyGen.initialize(4096);
         KeyPair par = KeyGen.generateKeyPair();
         PrivateKey clavepriv = par.getPrivate();
         PublicKey clavepubl = par.getPublic();

@@ -5,6 +5,7 @@
  */
 package Ventanas;
 
+import Datos.Privilegios;
 import Datos.Usuario;
 import java.awt.Image;
 import java.io.DataOutputStream;
@@ -30,14 +31,16 @@ public class FrmAdmin extends javax.swing.JFrame {
     private Socket servidor;
     private PublicKey serverKey;
     private Object[] claves;
+    private String idUser;
     /**
      * Creates new form FrmAdmin
      */
-    public FrmAdmin(Socket servidor, Object[] claves, PublicKey serverKey) throws IOException, ClassNotFoundException {
+    public FrmAdmin(Socket servidor, Object[] claves, PublicKey serverKey, String id) throws IOException, ClassNotFoundException {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
+        this.idUser = id;
         
         //Centra la ventana en el monitor
         setLocationRelativeTo(null);
@@ -55,6 +58,26 @@ public class FrmAdmin extends javax.swing.JFrame {
         Image priv = new ImageIcon(getClass().getResource("/Imagenes/cambiar.jpg")).getImage();
         Icon icono1 = new ImageIcon(priv.getScaledInstance(btnPrivilegios.getWidth(), btnPrivilegios.getHeight(), Image.SCALE_DEFAULT));
         btnPrivilegios.setIcon(icono1);
+        
+        Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        
+        if(p.getActivar() == 0){
+            
+            btnActivar.setEnabled(false);
+        }
+        if(p.getAlta() == 0){
+         
+            btnAdd.setEnabled(false);
+        }
+        if(p.getBaja() == 0){
+            btnEliminar.setEnabled(false);
+        }
+        if(p.getModificar()== 0){
+            btnMod.setEnabled(false);
+        }
+        if(p.getPrivilegios() == 0){
+            btnPrivilegios.setEnabled(false);
+        }
         
         
         ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
@@ -245,7 +268,7 @@ public class FrmAdmin extends javax.swing.JFrame {
                 //System.out.println(email+" Nombre");
 
                 this.setVisible(false);
-                FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email);
+                FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email,idUser);
                 fm.setVisible(true);
                     
                      
@@ -343,7 +366,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             dos.writeBoolean(true);
             dos.writeInt(3);//3 AÑADIR USUARIO
             this.setVisible(false);
-            FrmAddUser fa = new FrmAddUser(servidor,claves, serverKey);
+            FrmAddUser fa = new FrmAddUser(servidor,claves, serverKey,idUser);
             fa.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
@@ -351,7 +374,6 @@ public class FrmAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnPrivilegiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrivilegiosActionPerformed
-        // TODO add your handling code here:
         int filaseleccionada = tabla.getSelectedRow();
         if (filaseleccionada == -1){
            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
@@ -359,6 +381,25 @@ public class FrmAdmin extends javax.swing.JFrame {
             String tipo = (String)tabla.getValueAt(filaseleccionada, 4);
             if(tipo.equals("User")){
                 JOptionPane.showMessageDialog(null, "Sólo se pueden cambiar los privilegios a Administradores");
+            }else{
+                this.setVisible(false);
+                 
+                try {
+                    DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                    dos.writeBoolean(true);
+                    dos.writeInt(4);//2 MODIFICAR
+                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                    
+                
+                    FrmPrivilegios fp = new FrmPrivilegios(servidor, claves, serverKey, idUser, email);
+                    fp.setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
             }
         }
     }//GEN-LAST:event_btnPrivilegiosActionPerformed

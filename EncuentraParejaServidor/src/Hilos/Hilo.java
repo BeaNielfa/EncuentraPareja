@@ -8,6 +8,7 @@ package Hilos;
 import Conexion.Conexion;
 import Datos.Firmas;
 import Datos.Preferencias;
+import Datos.Privilegios;
 import Datos.Usuario;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -79,9 +80,10 @@ public class Hilo extends Thread {
 
                         if (verificado) {
                             insert = c.insertarUsuario(u);
+                            String id = c.obtenerId(u.getEmail());
                             if (insert > 0) {//SI SE HA INSERTADO EL USUARIO
 
-                                int insertR = c.insertarRol(Integer.parseInt(idPrincipal), 2);//LE PONEMOS EL TIPO DE USUARIO 
+                                int insertR = c.insertarRol(Integer.parseInt(id), 2);//LE PONEMOS EL TIPO DE USUARIO 
                                 if (insertR > 0) {
                                     insertado = true;
                                 }
@@ -115,13 +117,17 @@ public class Hilo extends Thread {
 
                         if (existe) {//SI EL USUARIO EXISTE
 
-                            String tipo = c.obtenerTipoUser(u.getEmail());//OBTENEMOS EL TIPO DE USUARIO 
+                            String tipo = c.obtenerTipoUser(idPrincipal);//OBTENEMOS EL TIPO DE USUARIO 
                             enviar.writeUTF(tipo);
-                            int activado = c.isActivado(u.getEmail());//OBTENEMOS SI ESTA ACTIVADO O NO 
+                            int activado = c.isActivado(idPrincipal);//OBTENEMOS SI ESTA ACTIVADO O NO 
                             enviar.writeInt(activado);
-
+                            enviar.writeUTF(idPrincipal);
+                            
                             if (tipo.equals("Admin")) {
-
+                                
+                                Privilegios pr = c.cogerPrivilegios(idPrincipal);
+                                Utilidades.Util.enviarObject(cliente, pr);
+                                
                                 ArrayList lu = new ArrayList();
                                 lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                 //ENVIAMOS LA LISTA DE USUARIOS
@@ -134,7 +140,8 @@ public class Hilo extends Thread {
                                         case 0://ACTIVAR USUARIO
 
                                             email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE ACTIVAR
-                                            activado = c.isActivado(email);
+                                            String idAct = c.obtenerId(email);
+                                            activado = c.isActivado(idAct);
                                             c.activarUsuario(email, activado);
 
                                             //ACTUALIZAMOS LA LISTA
@@ -163,7 +170,8 @@ public class Hilo extends Thread {
 
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
                                             c.actualizarUsuario(us, email);
-
+                                            
+                                            Utilidades.Util.enviarObject(cliente, pr);
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
@@ -177,22 +185,33 @@ public class Hilo extends Thread {
                                             insertado = false;
                                             if (insert > 0) {//SI SE HA INSERTADO EL USUARIO
                                                 String id = c.obtenerId(u.getEmail());
-                                                int tipoUser;
-                                                if (u.getTipoUser().equals("Admin")) {
-                                                    tipoUser = 1;
-                                                } else {
-                                                    tipoUser = 2;
-                                                }
-                                                //INSERTAMOS EL ROL
-                                                int insertR = c.insertarRol(Integer.parseInt(id), tipoUser);//LE PONEMOS EL TIPO DE USUARIO 
-                                                if (insertR > 0) {
+                                                
+                                                int insertR = c.insertarRol(Integer.parseInt(id), 1);//LE PONEMOS EL TIPO DE USUARIO 
+                                                int priv = c.insertarPrivilegios(id);
+                                                if (priv > 0) {
                                                     insertado = true;
                                                 }
                                             }
                                             //ENVIAMOS SI TODO HA IDO BIEN O NO
                                             enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
-
+                                            
+                                            Utilidades.Util.enviarObject(cliente, pr);
                                             //ACTUALIZAMOS LA LISTA
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            //ENVIAMOS LA LISTA DE USUARIOS
+                                            Utilidades.Util.enviarObject(cliente, lu);
+                                            break;
+                                        case 4://CAMBIAR PRIVILEGIOS
+                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY CAMBIARLE LOS PRIVILEGIOS
+                                            String id = c.obtenerId(email);
+                                            
+                                            Privilegios priv = c.cogerPrivilegios(id);
+                                            Utilidades.Util.enviarObject(cliente, priv);//ENVIAMOS LOS PRIVILEGIOS QUE TIENE ESE USUARIO
+                                            
+                                            priv = (Privilegios) Utilidades.Util.recibirObjeto(cliente);
+                                            c.actualizarPrivilegios(priv, id);
+                                            
+                                            Utilidades.Util.enviarObject(cliente, pr);
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
