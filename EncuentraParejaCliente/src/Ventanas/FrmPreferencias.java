@@ -27,16 +27,16 @@ public class FrmPreferencias extends javax.swing.JFrame {
     private Socket servidor;
     private PublicKey serverKey;
     private Object[] claves;
-    private String email;
+    
     /**
      * Creates new form FrmPreferencias
      */
-    public FrmPreferencias(Socket servidor, Object[] claves, PublicKey serverKey,String email) {
+    public FrmPreferencias(Socket servidor, Object[] claves, PublicKey serverKey) {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
-        this.email = email;
+        
         
         //Centra la ventana en el monitor
         setLocationRelativeTo(null);
@@ -277,7 +277,7 @@ public class FrmPreferencias extends javax.swing.JFrame {
             
             DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
             DataInputStream dis = new DataInputStream(servidor.getInputStream());
-            dos.writeUTF(email);
+           
             Preferencias p = new Preferencias(relacion, deporte, politica, arte, hijos, interes);
             Utilidades.Util.enviarObject(servidor, p);
             

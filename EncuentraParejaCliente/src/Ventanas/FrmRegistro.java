@@ -6,7 +6,6 @@
 package Ventanas;
 
 import Datos.Firma;
-import Datos.Firmas;
 import Datos.Usuario;
 import java.awt.Image;
 import java.io.DataInputStream;
@@ -210,7 +209,7 @@ public class FrmRegistro extends javax.swing.JFrame {
                 byte[] cC = Utilidades.Util.cifrarAsimetrico(txtPass.getText(), serverKey);
                 Firma firmaC = new Firma(fC,cC);
                 
-                Firmas firma = new Firmas(firmaN, firmaA, firmaE, firmaC);
+                Firma[] firma ={firmaN,firmaA,firmaE,firmaC};
                 Utilidades.Util.enviarObject(servidor, firma);
                 
                 
@@ -219,7 +218,7 @@ public class FrmRegistro extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente", "Sentencia SQL", JOptionPane.INFORMATION_MESSAGE);
                     this.setVisible(false);
                     
-                    FrmPreferencias fm = new FrmPreferencias(servidor,claves,serverKey,u.getEmail());
+                    FrmPreferencias fm = new FrmPreferencias(servidor,claves,serverKey);
                     fm.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Ha ocurrido algun error", "Sentencia SQL", JOptionPane.ERROR_MESSAGE);
