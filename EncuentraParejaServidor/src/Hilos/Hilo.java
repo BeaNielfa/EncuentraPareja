@@ -6,6 +6,7 @@
 package Hilos;
 
 import Conexion.Conexion;
+import Datos.Firma;
 import Datos.Firmas;
 import Datos.Preferencias;
 import Datos.Privilegios;
@@ -52,7 +53,7 @@ public class Hilo extends Thread {
             boolean verificado = true;
             boolean seguir = true;
             int insert;
-
+            String idUsuarioNuevo = "";
             while (seguir) {
 
                 int op = recibir.readInt();
@@ -62,16 +63,16 @@ public class Hilo extends Thread {
                     case 0://REGISTRO
                         System.out.println("REGISTRO");
 
-                        Firmas firmas = (Firmas) Utilidades.Util.recibirObjeto(cliente);
-                        String ap = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaA().getMensaje(), clavepri);
-                        String nom = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaN().getMensaje(), clavepri);
-                        String em = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaE().getMensaje(), clavepri);
-                        String pass = Utilidades.Util.desencriptarAsimetrico(firmas.getFirmaC().getMensaje(), clavepri);
+                        Firma[] firmas = (Firma[]) Utilidades.Util.recibirObjeto(cliente);
+                        String ap = Utilidades.Util.desencriptarAsimetrico(firmas[1].getMensaje(), clavepri);
+                        String nom = Utilidades.Util.desencriptarAsimetrico(firmas[0].getMensaje(), clavepri);
+                        String em = Utilidades.Util.desencriptarAsimetrico(firmas[2].getMensaje(), clavepri);
+                        String pass = Utilidades.Util.desencriptarAsimetrico(firmas[3].getMensaje(), clavepri);
 
-                        if (Utilidades.Util.verifica(ap, clientKey, firmas.getFirmaA().getFirma())
-                                && Utilidades.Util.verifica(nom, clientKey, firmas.getFirmaN().getFirma())
-                                && Utilidades.Util.verifica(em, clientKey, firmas.getFirmaE().getFirma())
-                                && Utilidades.Util.verifica(pass, clientKey, firmas.getFirmaC().getFirma())) {
+                        if (Utilidades.Util.verifica(ap, clientKey, firmas[1].getFirma())
+                                && Utilidades.Util.verifica(nom, clientKey, firmas[0].getFirma())
+                                && Utilidades.Util.verifica(em, clientKey, firmas[2].getFirma())
+                                && Utilidades.Util.verifica(pass, clientKey, firmas[3].getFirma())) {
                             System.out.println("FIRMA VERIFICADA");
                         } else {
                             System.out.println("NO VERIFICADA");
@@ -80,10 +81,10 @@ public class Hilo extends Thread {
 
                         if (verificado) {
                             insert = c.insertarUsuario(u);
-                            String id = c.obtenerId(u.getEmail());
+                            idUsuarioNuevo = c.obtenerId(u.getEmail());
                             if (insert > 0) {//SI SE HA INSERTADO EL USUARIO
 
-                                int insertR = c.insertarRol(Integer.parseInt(id), 2);//LE PONEMOS EL TIPO DE USUARIO 
+                                int insertR = c.insertarRol(Integer.parseInt(idUsuarioNuevo), 2);//LE PONEMOS EL TIPO DE USUARIO 
                                 if (insertR > 0) {
                                     insertado = true;
                                 }
@@ -93,12 +94,12 @@ public class Hilo extends Thread {
                         enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
 
                         if (insertado) {
-                            String e = recibir.readUTF();
-                            String idUsuario = c.obtenerId(e);
+                            
+                            //String idUsuario = c.obtenerId(e);
 
                             Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
 
-                            int insertPreferencias = c.insertarPreferencia(idUsuario, p);
+                            int insertPreferencias = c.insertarPreferencia(idUsuarioNuevo, p);
 
                             if (insertPreferencias > 0) {
                                 enviar.writeBoolean(true);
