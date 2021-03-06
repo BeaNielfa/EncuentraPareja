@@ -107,10 +107,9 @@ public class Conexion {
         }
     }
     
-    public void actualizarUsuario (Usuario usuario, String email){
+    public void actualizarUsuario (Usuario usuario, String id){
         try {
-            //PRIMERO OBTENEMOS EL ID DE ESE USUARIO
-            String id = obtenerId(email);
+            
             int tipo ;
             this.abrirConexion();
             
@@ -281,15 +280,25 @@ public class Conexion {
         }
     }
     //----------------------------------------------------------
-    public ArrayList obtenerUsuariosTablaArrayList(String id) {
+    public ArrayList obtenerUsuariosTablaArrayList(String id, int tipo) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
+        String Sentencia ="";
         try {
-            String Sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado,tiporol.descripcion "
-                    + "from rolsasignados, tiporol, usuarios" +
-                    " WHERE usuarios.id = rolsasignados.idUser "
-                    + "AND rolsasignados.idRol = tiporol.id "
-                    + "AND usuarios.id <> "+id;;
+            if(tipo == 0){
+                Sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado,tiporol.descripcion "
+                        + "from rolsasignados, tiporol, usuarios" +
+                        " WHERE usuarios.id = rolsasignados.idUser "
+                        + "AND rolsasignados.idRol = tiporol.id "
+                        + "AND usuarios.id <> "+id;
+            }else{
+                Sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email, usuarios.activado,tiporol.descripcion "
+                        + "from rolsasignados, tiporol, usuarios" +
+                        " WHERE usuarios.id = rolsasignados.idUser "
+                        + "AND rolsasignados.idRol = tiporol.id "
+                        + "AND usuarios.id <> "+id
+                        + " AND tiporol.descripcion = 'User'";
+            }
             Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
             while (Conj_Registros.next()) {
                 lp.add(new Usuario(Conj_Registros.getString(1), Conj_Registros.getString(2), Conj_Registros.getString(3), Conj_Registros.getInt(4), Conj_Registros.getString(5)));
@@ -300,14 +309,14 @@ public class Conexion {
         return lp;
     }
     
-    public Usuario cogerUsuario (String email){
+    public Usuario cogerUsuario (String id){
         Usuario u = null;
         try {
             this.abrirConexion();
             
             String sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email "
                     + "FROM usuarios "
-                    + "WHERE  usuarios.email = '"+email+"'";
+                    + "WHERE  idUser = "+id+"";
             
             
             Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
@@ -385,6 +394,183 @@ public class Conexion {
         return u;
         
     }
+     
+     public Preferencias cogerPreferencias (String id){
+        Preferencias p = null;
+        try {
+            this.abrirConexion();
+            
+            String sentencia = "SELECT relacion, deporte, politica, arte, hijos, interes "
+                    + "FROM Preferencias "
+                    + "WHERE  idUser = "+id+"";
+            
+            
+            Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
+            Conj_Registros.first();
+            p = new Preferencias (Conj_Registros.getString(1),Conj_Registros.getInt(2),Conj_Registros.getInt(3),Conj_Registros.getInt(4),Conj_Registros.getString(5), Conj_Registros.getString(6));
+            
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
+        
+    }
+    
+     public void actualizarPreferencias (Preferencias p, String id){
+        try {
+            
+            this.abrirConexion();
+            System.out.println(id+" IDDDDDDDDDD ");
+            String update1 = "UPDATE preferencias SET RELACION = '"+p.getRelacion()+"' , "
+                    + "DEPORTE = "+p.getDeporte()+" , "
+                    +"POLITICA = "+p.getPolitica()+" , "+
+                    "ARTE = "+p.getArte()+" , "+
+                    "HIJOS = '"+p.getHijos()+"' , "+
+                    "INTERES = '"+p.getInteres()+
+                    "' WHERE idUser = "+id;
+            
+            
+            Sentencia_SQL.executeUpdate(update1);
+            
+            
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //----------------------------------------------------------
+    public ArrayList obtenerUsuariosTablaGustosArrayList(String id, Preferencias p) {
+        this.abrirConexion();
+        ArrayList lp = new ArrayList();
+        try {
+            /*
+            SELECT USUARIOS.nombre, usuarios.apellidos
+            FROM usuarios, preferencias
+            WHERE usuarios.id = preferencias.idUser
+            AND usuarios.id <> 61
+            AND preferencias.interes ='HOMBRES'
+            AND preferencias.relacion = 'ESPORADICA'
+            AND preferencias.hijos = 'QUIERE'
+            AND preferencias.deporte BETWEEN 40 AND 60
+            AND preferencias.politica BETWEEN 10 AND 30
+            AND preferencias.arte BETWEEN 50 AND 70
+
+            */
+            String interes = p.getInteres();
+            if(interes.equals("Mujeres")){
+                interes = "Hombres";
+            }else if(interes.equals("Hombres")){
+                interes = "Mujeres";
+            }
+            int deportMin = p.getDeporte()-20;
+            int deportMax = p.getDeporte()+20;
+            
+            int polMin = p.getPolitica()-20;
+            int polMax = p.getPolitica()+20;
+            
+            int arteMin = p.getArte()-20;
+            int arteMax = p.getArte()+20;
+            
+           
+            String Sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email "
+                    + "from usuarios, preferencias" +
+                    " WHERE usuarios.id = preferencias.idUser "
+                    + "AND usuarios.id <> "+ id
+                    + " AND preferencias.interes ='"+interes+"'"
+                    + "AND preferencias.relacion = '"+p.getRelacion()+"'"
+                    + "AND preferencias.hijos = '"+p.getHijos()+"'"
+                    + "AND preferencias.deporte BETWEEN "+deportMin+" AND "+deportMax
+                    + " AND preferencias.politica BETWEEN "+polMin +" AND "+polMax
+                    + " AND preferencias.arte BETWEEN "+arteMin+" AND "+arteMax;
+            
+            Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
+            while (Conj_Registros.next()) {
+                lp.add(new Usuario(Conj_Registros.getString(1), Conj_Registros.getString(2), Conj_Registros.getString(3)));
+                System.out.println("EHHHHHH"+Conj_Registros.getString(1)+Conj_Registros.getString(2)+ Conj_Registros.getString(3));
+            }
+        } catch (SQLException ex) {
+        }
+        this.cerrarConexion();
+        return lp;
+    }
+    
+     //----------------------------------------------------------
+    public int insertarLike(String idUser, String idLike) {
+       int cont = 0;
+        try {
+            this.abrirConexion();
+            
+            String Sentencia = "INSERT INTO likes (idUser1,idUser2) "
+                    + "VALUES ("+idUser+" , "+idLike+")";
+            
+            
+            cont  =  Sentencia_SQL.executeUpdate(Sentencia);
+            
+            
+            
+            
+            this.cerrarConexion();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cont;
+        
+    }
+    
+      public int seGustan (String id, String like){
+       int cont = 0;
+        try {
+            this.abrirConexion();
+            //select * from likes where idUser1 = 61 and idUser2 = 64;
+            String sentencia = "SELECT * "
+                    + "FROM likes "
+                    + "WHERE  idUser1 = "+id
+                    + " AND idUser2 = "+like;
+            
+            
+            Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
+            while (Conj_Registros.next()) {
+                cont++;
+            }
+            System.out.println(cont+" CONTADOOOOOOOR");
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cont;
+        
+    }
+      
+      //----------------------------------------------------------
+    public int hacerseAmigos(String id, String like) {
+       int cont = 0;
+       int contS = 0;
+        try {
+            this.abrirConexion();
+            
+            
+            String Sentencia = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+id+" , "+like+"  )";
+
+
+            cont  =  Sentencia_SQL.executeUpdate(Sentencia);
+           
+            String Sentencia1 = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+like+" , "+id+"  )";
+            
+            contS  =  Sentencia_SQL.executeUpdate(Sentencia1);
+            
+        } catch (SQLException ex) {
+            
+            
+        }
+        this.cerrarConexion();
+        return cont;
+        
+    }
+    
+    
     
     //---------------------------------------------------------
     public void cerrarConexion() {

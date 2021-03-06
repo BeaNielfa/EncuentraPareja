@@ -27,15 +27,17 @@ public class FrmPreferencias extends javax.swing.JFrame {
     private Socket servidor;
     private PublicKey serverKey;
     private Object[] claves;
+    private int tipo;
     
     /**
      * Creates new form FrmPreferencias
      */
-    public FrmPreferencias(Socket servidor, Object[] claves, PublicKey serverKey) {
+    public FrmPreferencias(Socket servidor, Object[] claves, PublicKey serverKey, int tipo) throws IOException, ClassNotFoundException {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
+        this.tipo = tipo;
         
         
         //Centra la ventana en el monitor
@@ -59,6 +61,36 @@ public class FrmPreferencias extends javax.swing.JFrame {
         modeloPolitica.setMinimum(0);
         modeloPolitica.setMaximum(100);
         jsPolitica.setModel(modeloPolitica);
+        
+        
+        if (tipo != 0){//CUANDO EL TIPO ES DISTINTO A 0 RECOGEMOS LAS PREFERENCIAS DEL USUARIO A ACTUALIZAR
+            Preferencias p = (Preferencias)Utilidades.Util.recibirObjeto(servidor);
+            if(p.getHijos().equals("Quiere")){
+                jrbQuiere.setSelected(true);
+            }else if(p.getHijos().equals("Tiene")){
+                jrbTiene.setSelected(true);
+            }else if(p.getHijos().equals("Ambos")){
+                jrbHijosAmbos.setSelected(true);
+            }
+            
+            if(p.getRelacion().equals("Seria")){
+                jrbSeria.setSelected(true);
+            }else if(p.getRelacion().equals("Esporadica")){
+                jrbEsporadica.setSelected(true);
+            }
+            
+            if(p.getInteres().equals("Mujeres")){
+                jrbMujeres.setSelected(true);
+            }else if(p.getInteres().equals("Hombres")){
+                jrbHombres.setSelected(true);
+            }else if(p.getInteres().equals("Ambos")){
+                jrbInteresAmbos.setSelected(true);
+            }
+            
+            jsPolitica.setValue(p.getPolitica());
+            jsArte.setValue(p.getArte());
+            jsDeporte.setValue(p.getDeporte());
+        }
         
     }
     @SuppressWarnings("unchecked")
@@ -282,15 +314,24 @@ public class FrmPreferencias extends javax.swing.JFrame {
             Utilidades.Util.enviarObject(servidor, p);
             
             
-            boolean insertado = dis.readBoolean();
+            if(tipo == 0){
             
-            if(insertado){
-                JOptionPane.showMessageDialog(null, "Preferencias Insertadas, ahora debe esperar a ser activado por un Administrador", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
+                boolean insertado = dis.readBoolean();
+
+                if(insertado){
+                    JOptionPane.showMessageDialog(null, "Preferencias Insertadas", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    System.exit(0);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Ha ocurrido algún error", "Informacion", JOptionPane.ERROR_MESSAGE);
+                }
             }else{
-                JOptionPane.showMessageDialog(null, "Ha ocurrido algún error", "Informacion", JOptionPane.ERROR_MESSAGE);
+                this.setVisible(false);
+                FrmInicio fi = new FrmInicio(servidor, claves, serverKey);
+                fi.setVisible(true);
             }
         } catch (IOException ex) {
+            Logger.getLogger(FrmPreferencias.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmPreferencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed

@@ -129,7 +129,7 @@ public class Hilo extends Thread {
                                 Utilidades.Util.enviarObject(cliente, pr);
                                 
                                 ArrayList lu = new ArrayList();
-                                lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                 //ENVIAMOS LA LISTA DE USUARIOS
                                 Utilidades.Util.enviarObject(cliente, lu);
 
@@ -145,7 +145,7 @@ public class Hilo extends Thread {
                                             c.activarUsuario(email, activado);
 
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -154,13 +154,14 @@ public class Hilo extends Thread {
                                             email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
                                             c.eliminarUsuario(email);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
                                         case 2://MODIFICAR UN USUARIO
                                             email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
-                                            Usuario us = c.cogerUsuario(email);//RECOGEMOS SUS DATOS
+                                            String idMod = c.obtenerId(email);
+                                            Usuario us = c.cogerUsuario(idMod);//RECOGEMOS SUS DATOS
 
                                             //MANDAMOS EL USUARIO PARA QUE PUEDA TENER ACCESO A SUS DATOS
                                             Utilidades.Util.enviarObject(cliente, us);
@@ -169,11 +170,11 @@ public class Hilo extends Thread {
                                             us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
 
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
-                                            c.actualizarUsuario(us, email);
+                                            c.actualizarUsuario(us, idMod);
                                             
                                             Utilidades.Util.enviarObject(cliente, pr);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -197,7 +198,7 @@ public class Hilo extends Thread {
                                             
                                             Utilidades.Util.enviarObject(cliente, pr);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -212,7 +213,7 @@ public class Hilo extends Thread {
                                             c.actualizarPrivilegios(priv, id);
                                             
                                             Utilidades.Util.enviarObject(cliente, pr);
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -220,6 +221,62 @@ public class Hilo extends Thread {
 
                                 }
 
+                            }else if(tipo.equals("User")){
+                               Preferencias pre = c.cogerPreferencias(idPrincipal);
+                               ArrayList us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);
+                                
+                                
+                                Utilidades.Util.enviarObject(cliente, us);
+                                while (recibir.readBoolean()) {
+                                    int opc = recibir.readInt();
+                                
+                                    switch (opc){
+                                        case 0:
+                                            ArrayList lu = c.obtenerUsuariosTablaArrayList(idPrincipal,1);
+                                            Utilidades.Util.enviarObject(cliente, lu);
+                                            break;
+                                        case 1:
+                                            
+                                            
+                                            u = c.cogerUsuario(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, u);
+                                            u = (Usuario) Utilidades.Util.recibirObjeto(cliente);
+                                            
+                                            //ACTUALIZAMOS EL USUARIO EN LA BBDD
+                                            c.actualizarUsuario(u, idPrincipal);
+                                            
+                                            pre = c.cogerPreferencias(idPrincipal);
+                                            us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);
+                                            Utilidades.Util.enviarObject(cliente, us);
+                                            break;
+                                        case 2:
+                                            pre = c.cogerPreferencias(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, pre);
+                                            
+                                            Preferencias pref = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
+                                            c.actualizarPreferencias(pref, idPrincipal);
+                                            
+                                            pre = c.cogerPreferencias(idPrincipal);
+                                            us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);
+                                            Utilidades.Util.enviarObject(cliente, us);
+                                            break;
+                                        case 3:
+                                            
+                                            String email = recibir.readUTF();
+                                            String idLike = c.obtenerId(email);
+                                            c.insertarLike(idPrincipal, idLike);
+                                            
+                                            int gustan = c.seGustan(idPrincipal, idLike);
+                                            
+                                            if(gustan > 0){
+                                                c.hacerseAmigos(idPrincipal, idLike);
+                                            }
+                                            us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);
+                                            Utilidades.Util.enviarObject(cliente, us);
+                                            break;
+                                    }
+                                }
+                                
                             }
 
                         }

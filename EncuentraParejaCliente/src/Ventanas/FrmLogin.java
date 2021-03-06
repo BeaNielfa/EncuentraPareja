@@ -161,7 +161,9 @@ public class FrmLogin extends javax.swing.JFrame {
                         fa.setVisible(true);
                     }else{
                         System.out.println("USUARIO NORMAL ACCEDIENDO");
-                       
+                        this.setVisible(false);
+                        FrmInicio fi = new FrmInicio(servidor,claves, serverKey);
+                        fi.setVisible(true);
                     }
 
                 }else{

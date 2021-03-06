@@ -5,8 +5,17 @@
  */
 package Ventanas;
 
+import Datos.Usuario;
+import java.awt.Image;
+import java.io.IOException;
 import java.net.Socket;
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,13 +29,42 @@ public class FrmInicio extends javax.swing.JFrame {
     /**
      * Creates new form FrmInicio
      */
-    public FrmInicio(Socket servidor, Object[] claves, PublicKey serverKey) {
+    public FrmInicio(Socket servidor, Object[] claves, PublicKey serverKey) throws IOException, ClassNotFoundException {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
+        
+        //Centra la ventana en el monitor
+        setLocationRelativeTo(null);
+        
+        //Icono
+        Image imgIcon = new ImageIcon (getClass().getResource("/Imagenes/ico.png")).getImage();
+        setIconImage(imgIcon);
+        
+        ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
+        
+        
+        rellenarTabla(lu);
     }
 
+     private void rellenarTabla(ArrayList lu){
+        String[] dato = new String[2];
+        String[] titulos = {"Usuario", "Email"};
+            DefaultTableModel formatoTabla = new DefaultTableModel();
+            formatoTabla = new DefaultTableModel(null, titulos);
+            tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+            //Con el bucle vamos metiendo los datos en la tabla
+            for (int i = 0; i < lu.size(); i++) {
+                Usuario u = (Usuario) lu.get(i);
+                dato[0]=u.getNombre()+" "+ u.getApellidos();
+                dato[1] = u.getEmail();
+                
+                //Añadimos la fila
+                formatoTabla.addRow(dato);
+            }
+            tabla.setModel(formatoTabla);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -66,6 +104,11 @@ public class FrmInicio extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tabla);
 
         btnUsuarios.setText("Usuarios");
+        btnUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUsuariosActionPerformed(evt);
+            }
+        });
 
         btnLike.setText("Like");
 
@@ -132,6 +175,22 @@ public class FrmInicio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            this.setVisible(false);
+            FrmTodosUsuarios ftu = new FrmTodosUsuarios(servidor, claves, serverKey);
+            ftu.setVisible(true);
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUsuariosActionPerformed
 
     
 
