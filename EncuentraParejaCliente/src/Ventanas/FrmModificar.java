@@ -58,6 +58,29 @@ public class FrmModificar extends javax.swing.JFrame {
         
         
     }
+    
+    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey) throws IOException, ClassNotFoundException {
+        initComponents();
+        this.servidor = servidor;
+        this.claves = claves;
+        this.serverKey = serverKey;
+        this.email = email;
+        this.id = id;
+        //Centra la ventana en el monitor
+        setLocationRelativeTo(null);
+
+        Image imgIcon = new ImageIcon(getClass().getResource("/Imagenes/ico.png")).getImage();
+        setIconImage(imgIcon);
+
+       
+
+        Usuario u = (Usuario) Utilidades.Util.recibirObjeto(servidor);
+
+        txtNombre.setText(u.getNombre());
+        txtApellidos.setText(u.getApellidos());
+        txtEmail.setText(u.getEmail());
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -186,8 +209,13 @@ public class FrmModificar extends javax.swing.JFrame {
             
             
             this.setVisible(false);
-            FrmAdmin f = new FrmAdmin(servidor, claves, serverKey,id);
-            f.setVisible(true);
+            if(email == null){
+                FrmInicio fi = new FrmInicio(servidor, claves, serverKey);
+                fi.setVisible(true);
+            }else{
+                FrmAdmin f = new FrmAdmin(servidor, claves, serverKey, id);
+                f.setVisible(true);
+            }
         } catch (IOException ex) {
             Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

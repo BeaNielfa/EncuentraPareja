@@ -147,6 +147,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Mi Perfil"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPerfilActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPreferencias">
           <Properties>

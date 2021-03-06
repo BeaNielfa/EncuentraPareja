@@ -7,6 +7,7 @@ package Ventanas;
 
 import Datos.Usuario;
 import java.awt.Image;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.PublicKey;
@@ -113,6 +114,11 @@ public class FrmInicio extends javax.swing.JFrame {
         btnLike.setText("Like");
 
         btnPerfil.setText("Mi Perfil");
+        btnPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPerfilActionPerformed(evt);
+            }
+        });
 
         btnPreferencias.setText("Preferencias");
 
@@ -191,6 +197,22 @@ public class FrmInicio extends javax.swing.JFrame {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUsuariosActionPerformed
+
+    private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
+        try {
+            // TODO add your handling code here:
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(true);
+            dos.writeInt(1);//1 MODIFICAR
+            this.setVisible(false);
+            FrmModificar fm = new FrmModificar(servidor,claves, serverKey);
+            fm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_btnPerfilActionPerformed
 
     
 

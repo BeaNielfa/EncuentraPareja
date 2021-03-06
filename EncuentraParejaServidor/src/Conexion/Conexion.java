@@ -316,7 +316,7 @@ public class Conexion {
             
             String sentencia = "SELECT usuarios.nombre, usuarios.apellidos, usuarios.email "
                     + "FROM usuarios "
-                    + "WHERE  idUser = "+id+"";
+                    + "WHERE  id = "+id+"";
             
             
             Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
