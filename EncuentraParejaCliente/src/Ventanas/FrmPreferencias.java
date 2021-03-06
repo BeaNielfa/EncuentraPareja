@@ -143,6 +143,7 @@ public class FrmPreferencias extends javax.swing.JFrame {
         groupRelacion.add(jrbSeria);
         jrbSeria.setText("Seria:");
 
+        groupRelacion.add(jrbEsporadica);
         jrbEsporadica.setText("Esporadica");
 
         groupHijos.add(jrbTiene);

@@ -102,9 +102,8 @@ public class Util {
     
     public static String resumen (String contraseña) throws NoSuchAlgorithmException{
         
-            //MessageDigest md = MessageDigest.getInstance("SHA");
+       
             MessageDigest md = MessageDigest.getInstance("SHA1");
-            //MessageDigest md = MessageDigest.getInstance("MD5");
             
             byte datos[] = contraseña.getBytes(); //Texto en bytes
             md.update(datos);                //Se introduce el texto en bytes a resumir

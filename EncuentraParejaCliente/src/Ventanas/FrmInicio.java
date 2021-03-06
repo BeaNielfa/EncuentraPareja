@@ -85,6 +85,11 @@ public class FrmInicio extends javax.swing.JFrame {
         btnPreferencias = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 153, 255));
 
@@ -121,6 +126,11 @@ public class FrmInicio extends javax.swing.JFrame {
         });
 
         btnPreferencias.setText("Preferencias");
+        btnPreferencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreferenciasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -213,6 +223,32 @@ public class FrmInicio extends javax.swing.JFrame {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }//GEN-LAST:event_btnPerfilActionPerformed
+
+    private void btnPreferenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreferenciasActionPerformed
+       try {
+            // TODO add your handling code here:
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(true);
+            dos.writeInt(2);
+            this.setVisible(false);
+            FrmPreferencias fm = new FrmPreferencias(servidor,claves, serverKey,1);
+            fm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPreferenciasActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            // TODO add your handling code here:
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(false);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_formWindowClosing
 
     
 
