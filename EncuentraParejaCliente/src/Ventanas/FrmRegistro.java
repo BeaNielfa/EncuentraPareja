@@ -218,7 +218,7 @@ public class FrmRegistro extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente", "Sentencia SQL", JOptionPane.INFORMATION_MESSAGE);
                     this.setVisible(false);
                     
-                    FrmPreferencias fm = new FrmPreferencias(servidor,claves,serverKey);
+                    FrmPreferencias fm = new FrmPreferencias(servidor,claves,serverKey,0);
                     fm.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Ha ocurrido algun error", "Sentencia SQL", JOptionPane.ERROR_MESSAGE);

@@ -33,6 +33,15 @@ public class Usuario implements Serializable{
         this.email = email;
         //this.foto = foto;
     }
+    
+    //CONSTRUCTOR QUE UTILIZO PARA REGISTRAR UN NUEVO USUARIO
+    public Usuario (String nombre, String apellidos, String email, String contraseña){
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.email = email;
+        this.contraseña = contraseña;
+        
+    }
    
    //CONSTRUZTOR QUE UTILIZO PARA MOSTRAR LA LISTA DE USUARIOS
     public Usuario(String nombre, String apellidos, String email, int activado, String tipo) {
@@ -62,12 +71,7 @@ public class Usuario implements Serializable{
        this.tipoUser = tipo;
     }
 
-    public Usuario(String nombre, String apellidos, String em, String archivoFoto) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.email = em;
-        this.foto = archivoFoto;
-    }
+   
 
     public String getNombre() {
         return nombre;

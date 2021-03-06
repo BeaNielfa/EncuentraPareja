@@ -7,7 +7,6 @@ package Hilos;
 
 import Conexion.Conexion;
 import Datos.Firma;
-import Datos.Firmas;
 import Datos.Preferencias;
 import Datos.Privilegios;
 import Datos.Usuario;
@@ -62,13 +61,16 @@ public class Hilo extends Thread {
                 switch (op) {
                     case 0://REGISTRO
                         System.out.println("REGISTRO");
-
+                        
+                        //RECOGEMOS LA FIRMAS 
                         Firma[] firmas = (Firma[]) Utilidades.Util.recibirObjeto(cliente);
+                        //DESENCRIPTO LOS MENSAJES
                         String ap = Utilidades.Util.desencriptarAsimetrico(firmas[1].getMensaje(), clavepri);
                         String nom = Utilidades.Util.desencriptarAsimetrico(firmas[0].getMensaje(), clavepri);
                         String em = Utilidades.Util.desencriptarAsimetrico(firmas[2].getMensaje(), clavepri);
                         String pass = Utilidades.Util.desencriptarAsimetrico(firmas[3].getMensaje(), clavepri);
 
+                        //VERIFICO SI LA FIRMA ES CORRECTA
                         if (Utilidades.Util.verifica(ap, clientKey, firmas[1].getFirma())
                                 && Utilidades.Util.verifica(nom, clientKey, firmas[0].getFirma())
                                 && Utilidades.Util.verifica(em, clientKey, firmas[2].getFirma())
@@ -79,11 +81,11 @@ public class Hilo extends Thread {
                             verificado = false;
                         }
 
-                        if (verificado) {
-                            insert = c.insertarUsuario(u);
+                        if (verificado) {//SI ESTA VERIFICADA
+                            insert = c.insertarUsuario(u);//INSERTAMOS EL USUARIO
                             idUsuarioNuevo = c.obtenerId(u.getEmail());
                             if (insert > 0) {//SI SE HA INSERTADO EL USUARIO
-
+                                
                                 int insertR = c.insertarRol(Integer.parseInt(idUsuarioNuevo), 2);//LE PONEMOS EL TIPO DE USUARIO 
                                 if (insertR > 0) {
                                     insertado = true;
@@ -95,8 +97,6 @@ public class Hilo extends Thread {
 
                         if (insertado) {
                             
-                            //String idUsuario = c.obtenerId(e);
-
                             Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
 
                             int insertPreferencias = c.insertarPreferencia(idUsuarioNuevo, p);
@@ -130,7 +130,7 @@ public class Hilo extends Thread {
                                 Utilidades.Util.enviarObject(cliente, pr);
                                 
                                 ArrayList lu = new ArrayList();
-                                lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                 //ENVIAMOS LA LISTA DE USUARIOS
                                 Utilidades.Util.enviarObject(cliente, lu);
 
@@ -146,7 +146,7 @@ public class Hilo extends Thread {
                                             c.activarUsuario(email, activado);
 
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -155,13 +155,14 @@ public class Hilo extends Thread {
                                             email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
                                             c.eliminarUsuario(email);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
                                         case 2://MODIFICAR UN USUARIO
                                             email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
-                                            Usuario us = c.cogerUsuario(email);//RECOGEMOS SUS DATOS
+                                            String idMod = c.obtenerId(email);
+                                            Usuario us = c.cogerUsuario(idMod);//RECOGEMOS SUS DATOS
 
                                             //MANDAMOS EL USUARIO PARA QUE PUEDA TENER ACCESO A SUS DATOS
                                             Utilidades.Util.enviarObject(cliente, us);
@@ -170,11 +171,11 @@ public class Hilo extends Thread {
                                             us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
 
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
-                                            c.actualizarUsuario(us, email);
+                                            c.actualizarUsuario(us, idMod);
                                             
                                             Utilidades.Util.enviarObject(cliente, pr);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -198,7 +199,7 @@ public class Hilo extends Thread {
                                             
                                             Utilidades.Util.enviarObject(cliente, pr);
                                             //ACTUALIZAMOS LA LISTA
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -213,7 +214,7 @@ public class Hilo extends Thread {
                                             c.actualizarPrivilegios(priv, id);
                                             
                                             Utilidades.Util.enviarObject(cliente, pr);
-                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal);//RECOGEMOS LOS USUARIOS QUE HAY
+                                            lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
@@ -221,6 +222,61 @@ public class Hilo extends Thread {
 
                                 }
 
+                            }else if(tipo.equals("User")){//CUANDO INICIA SESION UN USUARIO NORMAL
+                               Preferencias pre = c.cogerPreferencias(idPrincipal);//RECOGEMOS SUS PREFERENCIAS INICIALES
+                               ArrayList us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);//PARA MOSTRARLE USUARIOS SEGUN SUS GUSTOS
+                               Utilidades.Util.enviarObject(cliente, us);//ENVIAMOS LA LISTA DE USUARIOS
+                               
+                                while (recibir.readBoolean()) {
+                                    int opc = recibir.readInt();//RECIBIMOS OPCION
+                                
+                                    switch (opc){
+                                        case 0://MOSTRAR TODOS LOS USUARIOS QUE HAY EN LA APLICACION
+                                            ArrayList lu = c.obtenerUsuariosTablaArrayList(idPrincipal,1);//RECOGEMOS LA LISTA, 1 ES PARA MOSTRAR LOS USUARIOS QUE NO SEAN ADMIN
+                                            Utilidades.Util.enviarObject(cliente, lu);//EMVIAMOS LA LISTA
+                                            break;
+                                        case 1://MODIFICAR NUESTRO PERFIL
+                                            u = c.cogerUsuario(idPrincipal);//COGEMOS NUESTRA INFORMACION
+                                            Utilidades.Util.enviarObject(cliente, u);//LA ENVIAMOS PARA PODER VERLA
+                                            u = (Usuario) Utilidades.Util.recibirObjeto(cliente);//RECIBIMOS EL OBJETO CON LOS CAMBIOS
+                                            
+                                            //ACTUALIZAMOS EL USUARIO EN LA BBDD
+                                            c.actualizarUsuario(u, idPrincipal);
+                                            
+                                            
+                                            pre = c.cogerPreferencias(idPrincipal);//VOLVEMOS A COGER LAS PREFERENCIAS
+                                            us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);//RECOGEMOS LA LISTA
+                                            Utilidades.Util.enviarObject(cliente, us);//ENVIAMOS LA LISTA
+                                            break;
+                                        case 2://ACTUALIZAR PREFERENCIAS
+                                            pre = c.cogerPreferencias(idPrincipal);//RECOGEMOS LAS PREFERENCIAS 
+                                            Utilidades.Util.enviarObject(cliente, pre);//LAS MANDAMOS PARA PODER VERLAS
+                                            
+                                            Preferencias pref = (Preferencias) Utilidades.Util.recibirObjeto(cliente);//RECOGEMOS LAS PREFERENCIAS CAMBIADAS
+                                            c.actualizarPreferencias(pref, idPrincipal);//ACTUALIZAMOS
+                                            
+                                            
+                                            pre = c.cogerPreferencias(idPrincipal);//VOLVEMOS A COGER LAS PREFERENCIAS
+                                            us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);//RECOGEMOS LA LISTA
+                                            Utilidades.Util.enviarObject(cliente, us);//ENVIAMOS LA LISTA
+                                            break;
+                                        case 3://LIKE
+                                            
+                                            String email = recibir.readUTF();
+                                            String idLike = c.obtenerId(email);
+                                            c.insertarLike(idPrincipal, idLike);
+                                            
+                                            int gustan = c.seGustan(idPrincipal, idLike);
+                                            
+                                            if(gustan > 0){
+                                                c.hacerseAmigos(idPrincipal, idLike);
+                                            }
+                                            us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);
+                                            Utilidades.Util.enviarObject(cliente, us);
+                                            break;
+                                    }
+                                }
+                                
                             }
 
                         }
