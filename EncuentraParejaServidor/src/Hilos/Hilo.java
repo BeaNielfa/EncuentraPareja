@@ -7,7 +7,6 @@ package Hilos;
 
 import Conexion.Conexion;
 import Datos.Firma;
-import Datos.Firmas;
 import Datos.Preferencias;
 import Datos.Privilegios;
 import Datos.Usuario;
