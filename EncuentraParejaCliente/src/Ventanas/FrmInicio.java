@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -111,6 +112,7 @@ public class FrmInicio extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tabla);
 
+        btnUsuarios.setBackground(new java.awt.Color(255, 255, 255));
         btnUsuarios.setText("Usuarios");
         btnUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,7 +120,13 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
+        btnLike.setBackground(new java.awt.Color(255, 255, 255));
         btnLike.setText("Me gusta/No me gusta");
+        btnLike.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLikeActionPerformed(evt);
+            }
+        });
 
         btnPerfil.setText("Mi Perfil");
         btnPerfil.addActionListener(new java.awt.event.ActionListener() {
@@ -134,6 +142,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
+        btnAmigos.setBackground(new java.awt.Color(255, 255, 255));
         btnAmigos.setText("Amigos");
         btnAmigos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,7 +150,13 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
+        btnListaLikes.setBackground(new java.awt.Color(255, 255, 255));
         btnListaLikes.setText("Lista Likes");
+        btnListaLikes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaLikesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -182,11 +197,12 @@ public class FrmInicio extends javax.swing.JFrame {
                 .addGap(52, 52, 52)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnListaLikes, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnUsuarios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnListaLikes, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPerfil)
@@ -280,6 +296,45 @@ public class FrmInicio extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnAmigosActionPerformed
+
+    private void btnLikeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLikeActionPerformed
+        try{
+            
+            int filaseleccionada = tabla.getSelectedRow();
+            if (filaseleccionada == -1){
+                JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
+            } else {
+
+                    DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                    dos.writeBoolean(true);
+                    dos.writeInt(3);//LIKE
+                    String email = (String)tabla.getValueAt(filaseleccionada, 1);
+                    dos.writeUTF(email);
+                    
+                    JOptionPane.showMessageDialog(null, "Su solicitud ha sido procesada");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+      
+
+    }//GEN-LAST:event_btnLikeActionPerformed
+
+    private void btnListaLikesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaLikesActionPerformed
+        try {
+            // TODO add your handling code here:
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(true);
+            dos.writeInt(4);
+            this.setVisible(false);
+            FrmListaLikes fl = new FrmListaLikes(servidor, claves, serverKey);
+            fl.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnListaLikesActionPerformed
 
     
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -55,15 +56,15 @@ public class FrmTodosUsuarios extends javax.swing.JFrame {
 
      private void rellenarTabla(ArrayList lu){
         String[] dato = new String[2];
-        String[] titulos = {"Nombre", "Apellidos"};
+        String[] titulos = {"Nombre", "Email"};
             DefaultTableModel formatoTabla = new DefaultTableModel();
             formatoTabla = new DefaultTableModel(null, titulos);
             tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
             //Con el bucle vamos metiendo los datos en la tabla
             for (int i = 0; i < lu.size(); i++) {
                 Usuario u = (Usuario) lu.get(i);
-                dato[0]=u.getNombre();
-                dato[1] = u.getApellidos();
+                dato[0]=u.getNombre()+" "+u.getApellidos();
+                dato[1] = u.getEmail();
                 
                 //Añadimos la fila
                 formatoTabla.addRow(dato);
@@ -85,6 +86,7 @@ public class FrmTodosUsuarios extends javax.swing.JFrame {
         tabla = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnVolver = new javax.swing.JButton();
+        btnLike = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -118,23 +120,31 @@ public class FrmTodosUsuarios extends javax.swing.JFrame {
             }
         });
 
+        btnLike.setText("Me gusta/No me gusta");
+        btnLike.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLikeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(169, 169, 169)
-                        .addComponent(jLabel1)))
-                .addContainerGap(87, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnVolver)
-                .addGap(55, 55, 55))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnVolver)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(169, 169, 169)
+                            .addComponent(jLabel1))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(69, 69, 69)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(191, 191, 191)
+                            .addComponent(btnLike))))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,10 +152,12 @@ public class FrmTodosUsuarios extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addComponent(jLabel1)
                 .addGap(36, 36, 36)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLike)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(btnVolver)
-                .addGap(29, 29, 29))
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -188,9 +200,31 @@ public class FrmTodosUsuarios extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_formWindowClosing
 
+    private void btnLikeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLikeActionPerformed
+         try{
+            
+            int filaseleccionada = tabla.getSelectedRow();
+            if (filaseleccionada == -1){
+                JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna fila.");
+            } else {
+
+                    DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                    dos.writeBoolean(true);
+                    dos.writeInt(3);//LIKE
+                    String email = (String)tabla.getValueAt(filaseleccionada, 1);
+                    dos.writeUTF(email);
+                    
+                    JOptionPane.showMessageDialog(null, "Su solicitud ha sido procesada");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_btnLikeActionPerformed
+
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLike;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

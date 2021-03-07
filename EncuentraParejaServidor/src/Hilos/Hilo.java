@@ -264,16 +264,16 @@ public class Hilo extends Thread {
                                             
                                             String email = recibir.readUTF();
                                             String idLike = c.obtenerId(email);
-                                            int gustan = c.seGustan(idPrincipal, idLike,0);
+                                            int gustan = c.seGustan(idPrincipal, idLike);
                                             
                                             if(gustan > 0){
                                                 c.borrarLike(idPrincipal, idLike);
                                             }else{
                                                 c.insertarLike(idPrincipal, idLike);
                                             }
-                                            gustan = c.seGustan(idPrincipal, idLike,1);
-                                            
-                                            if(gustan > 0){
+                                            gustan = c.seGustan(idPrincipal, idLike);
+                                            int gustanLike = c.seGustan(idLike, idPrincipal);
+                                            if(gustan > 0 && gustanLike >0){
                                                 
                                                 c.hacerseAmigos(idPrincipal, idLike);
                                             }
@@ -301,10 +301,17 @@ public class Hilo extends Thread {
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             break;
                                         case 7:
+                                            
                                             email = recibir.readUTF();
                                             idLike = c.obtenerId(email);
-                                            c.insertarLike(idPrincipal, idLike);
-                                            
+                                            gustan = c.seGustan(idPrincipal, idLike);
+                                            if(gustan >0){
+                                                
+                                                enviar.writeInt(0);
+                                            }else{
+                                                enviar.writeInt(1);
+                                                c.insertarLike(idPrincipal, idLike);
+                                            }
                                             likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             break;
