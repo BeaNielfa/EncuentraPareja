@@ -594,25 +594,25 @@ public class Conexion {
         return lista;
     }
     
-    public int seGustan (String id, String like, int tipo){
+    public int seGustan (String id, String like){
        int cont = 0;
        String sentencia ="";
         try {
             this.abrirConexion();
             
-            if(tipo == 0){
+           // if(tipo == 0){
                  sentencia = "SELECT * "
                     + "FROM likes "
                     + "WHERE  idUser1 = "+id
                     + " AND idUser2 = "+like;
                     
-            }else{
-                 sentencia = "SELECT * "
-                    + "FROM likes "
-                    + "WHERE  idUser1 = "+id
-                    + " AND idUser2 = "+like
-                    + " OR idUser1= "+like+" AND idUser2 = "+id;
-            }
+           // }else{
+//                 sentencia = "SELECT * "
+//                    + "FROM likes "
+//                    + "WHERE  idUser1 = "+id
+//                    + " AND idUser2 = "+like
+//                    + " OR idUser1= "+like+" AND idUser2 = "+id;
+           // }
             
             Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
             while (Conj_Registros.next()) {

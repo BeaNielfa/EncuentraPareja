@@ -112,6 +112,7 @@ public class FrmInicio extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tabla);
 
+        btnUsuarios.setBackground(new java.awt.Color(255, 255, 255));
         btnUsuarios.setText("Usuarios");
         btnUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,6 +120,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
+        btnLike.setBackground(new java.awt.Color(255, 255, 255));
         btnLike.setText("Me gusta/No me gusta");
         btnLike.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,6 +142,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
+        btnAmigos.setBackground(new java.awt.Color(255, 255, 255));
         btnAmigos.setText("Amigos");
         btnAmigos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,6 +150,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
+        btnListaLikes.setBackground(new java.awt.Color(255, 255, 255));
         btnListaLikes.setText("Lista Likes");
         btnListaLikes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -306,6 +310,8 @@ public class FrmInicio extends javax.swing.JFrame {
                     dos.writeInt(3);//LIKE
                     String email = (String)tabla.getValueAt(filaseleccionada, 1);
                     dos.writeUTF(email);
+                    
+                    JOptionPane.showMessageDialog(null, "Su solicitud ha sido procesada");
             }
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);

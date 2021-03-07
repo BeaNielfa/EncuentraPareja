@@ -7,6 +7,7 @@ package Ventanas;
 
 import Datos.Usuario;
 import java.awt.Image;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -280,6 +281,8 @@ public class FrmListaLikes extends javax.swing.JFrame {
                 String email = (String)tabla.getValueAt(filaseleccionada, 1);
                  
                 dos.writeUTF(email);
+                
+                JOptionPane.showMessageDialog(null, "Su solicitud ha sido procesada");
              
                 ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
         
@@ -302,6 +305,7 @@ public class FrmListaLikes extends javax.swing.JFrame {
             } else {
                 
                 DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+                DataInputStream dis = new DataInputStream(servidor.getInputStream());
                 dos.writeBoolean(true);
 
                 dos.writeInt(7);
@@ -309,7 +313,13 @@ public class FrmListaLikes extends javax.swing.JFrame {
                 String email = (String)tablaGustar.getValueAt(filaseleccionada, 1);
                  
                 dos.writeUTF(email);
-             
+                
+                int result = dis.readInt();
+                if(result == 0){
+                    JOptionPane.showMessageDialog(null, "Ya le gusta este Usuario");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Su solicitud ha sido procesada");
+                }
                 ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
         
         
