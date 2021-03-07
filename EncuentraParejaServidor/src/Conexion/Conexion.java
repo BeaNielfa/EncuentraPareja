@@ -265,6 +265,14 @@ public class Conexion {
             //PRIMERO OBTENEMOS EL ID DE ESE USUARIO 
             String id = obtenerId(email);
             this.abrirConexion();
+            String borrarLikes = "DELETE FROM LIKES WHERE IDUSER1 = "+id;
+            Sentencia_SQL.executeUpdate(borrarLikes);
+            String borrarLikes1 = "DELETE FROM LIKES WHERE IDUSER2 = "+id;
+            Sentencia_SQL.executeUpdate(borrarLikes1);
+            String borrarAmigos = "DELETE FROM AMIGOS WHERE IDUSER1 = "+id;
+            Sentencia_SQL.executeUpdate(borrarAmigos);
+            String borrarAmigos1 = "DELETE FROM AMIGOS WHERE IDUSER2 = "+id;
+            Sentencia_SQL.executeUpdate(borrarAmigos1);
             String sentencia1 = "DELETE FROM ROLSASIGNADOS WHERE IDUSER = "+id;
             Sentencia_SQL.executeUpdate(sentencia1);
             String borrarP = "DELETE FROM preferencias WHERE IDUSER = "+id;
