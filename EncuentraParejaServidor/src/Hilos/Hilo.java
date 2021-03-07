@@ -264,15 +264,54 @@ public class Hilo extends Thread {
                                             
                                             String email = recibir.readUTF();
                                             String idLike = c.obtenerId(email);
-                                            c.insertarLike(idPrincipal, idLike);
-                                            
-                                            int gustan = c.seGustan(idPrincipal, idLike);
+                                            int gustan = c.seGustan(idPrincipal, idLike,0);
                                             
                                             if(gustan > 0){
+                                                c.borrarLike(idPrincipal, idLike);
+                                            }else{
+                                                c.insertarLike(idPrincipal, idLike);
+                                            }
+                                            gustan = c.seGustan(idPrincipal, idLike,1);
+                                            System.out.println("GUSTAN "+gustan);
+                                            if(gustan > 0){
+                                                System.out.println("VAN A HACERSE AMIGOS");
                                                 c.hacerseAmigos(idPrincipal, idLike);
                                             }
+                                            break;
+                                        case 4://MOSTRAR QUE USUARIOS ME GUSTAN Y A CUALES LES GUSTO YO
+                                            ArrayList likes = new ArrayList();
+                                            likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
+                                            Utilidades.Util.enviarObject(cliente, likes);
+                                            
+                                            likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,1);
+                                            Utilidades.Util.enviarObject(cliente, likes);
+                                            break;
+                                        case 5://VOLVER AL FRM INICO MOSTRANDO LA TABLA LIKES
+                                            pre = c.cogerPreferencias(idPrincipal);
                                             us = c.obtenerUsuariosTablaGustosArrayList(idPrincipal, pre);
                                             Utilidades.Util.enviarObject(cliente, us);
+                                            break;
+                                        case 6://BORRAR LIKE
+                                            email = recibir.readUTF();
+                                            idLike = c.obtenerId(email);
+                                            
+                                            c.borrarLike(idPrincipal, idLike);
+                                            
+                                            likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
+                                            Utilidades.Util.enviarObject(cliente, likes);
+                                            break;
+                                        case 7:
+                                            email = recibir.readUTF();
+                                            idLike = c.obtenerId(email);
+                                            c.insertarLike(idPrincipal, idLike);
+                                            
+                                            likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
+                                            Utilidades.Util.enviarObject(cliente, likes);
+                                            break;
+                                        case 8:
+                                            ArrayList amigos = new ArrayList();
+                                            amigos = c.obtenerAmigos(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, amigos);
                                             break;
                                     }
                                 }
