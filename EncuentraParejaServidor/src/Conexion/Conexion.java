@@ -544,22 +544,155 @@ public class Conexion {
         
     }
       
+     //----------------------------------------------------------
+    public ArrayList obtenerUsuariosLikesTablaArrayList(String id, int tipo) {
+        this.abrirConexion();
+        ArrayList lp = new ArrayList();
+        ArrayList lista = new ArrayList() ;
+        String Sentencia ="";
+        try {
+
+            if(tipo == 0){
+                Sentencia ="SELECT idUser2 FROM LIKES "
+                        +"WHERE idUser1 = "+id;
+            }else{
+                Sentencia ="SELECT idUser1 FROM LIKES "
+                        +"WHERE idUser2 = "+id;
+               
+            }
+            Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
+
+            while (Conj_Registros.next()) {
+                lp.add(Conj_Registros.getInt(1));
+            }
+            
+            for (int i = 0; i < lp.size(); i++) {
+                Sentencia = "SELECT nombre, apellidos, email "+
+                            "FROM USUARIOS "+
+                            "WHERE ID = "+lp.get(i);
+                
+                Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
+                
+                Conj_Registros.first();
+                lista.add(new Usuario (Conj_Registros.getString(1), Conj_Registros.getString(2),Conj_Registros.getString(3)));
+                
+            }
+        } catch (SQLException ex) {
+        }
+        this.cerrarConexion();
+        return lista;
+    }
+    
+    
+    //----------------------------------------------------------
+    public ArrayList obtenerAmigos(String id) {
+        this.abrirConexion();
+        ArrayList lp = new ArrayList();
+        ArrayList lista = new ArrayList() ;
+        String Sentencia ="";
+        try {
+
+            Sentencia ="SELECT idUser2 FROM AMIGOS "
+                        +"WHERE idUser1 = "+id;
+            Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
+
+            while (Conj_Registros.next()) {
+                lp.add(Conj_Registros.getInt(1));
+            }
+            
+            for (int i = 0; i < lp.size(); i++) {
+                Sentencia = "SELECT nombre, apellidos, email "+
+                            "FROM USUARIOS "+
+                            "WHERE ID = "+lp.get(i);
+                
+                Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
+                
+                Conj_Registros.first();
+                lista.add(new Usuario (Conj_Registros.getString(1), Conj_Registros.getString(2),Conj_Registros.getString(3)));
+                
+            }
+        } catch (SQLException ex) {
+        }
+        this.cerrarConexion();
+        return lista;
+    }
+    
+    public int seGustan (String id, String like, int tipo){
+       int cont = 0;
+       String sentencia ="";
+        try {
+            this.abrirConexion();
+            //select * from likes where idUser1 = 61 and idUser2 = 64;
+            if(tipo == 0){
+                 sentencia = "SELECT * "
+                    + "FROM likes "
+                    + "WHERE  idUser1 = "+id
+                    + " AND idUser2 = "+like;
+                    //+ " OR idUser1= "+like+"AND idUser2 = "+id;
+            }else{
+                 sentencia = "SELECT * "
+                    + "FROM likes "
+                    + "WHERE  idUser1 = "+id
+                    + " AND idUser2 = "+like
+                    + " OR idUser1= "+like+" AND idUser2 = "+id;
+            }
+            
+            Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
+            while (Conj_Registros.next()) {
+                cont++;
+            }
+           // System.out.println(cont+" CONTADOOOOOOOR");
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cont;
+        
+    }
+      
+      
+      public void borrarLike (String id, String like){
+  
+        try {
+            this.abrirConexion();
+//           String sentencia1 = "DELETE FROM ROLSASIGNADOS WHERE IDUSER = "+id;
+//            Sentencia_SQL.executeUpdate(sentencia1);
+            String sentencia = "DELETE FROM LIKES WHERE idUser1 = "+id +" AND idUser2 = "+like;
+            
+            
+            Sentencia_SQL.executeUpdate(sentencia);
+            
+            this.cerrarConexion();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        
+    }
+      
       //----------------------------------------------------------
     public int hacerseAmigos(String id, String like) {
        int cont = 0;
        int contS = 0;
         try {
             this.abrirConexion();
-            
-            
-            String Sentencia = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+id+" , "+like+"  )";
+            String sonAmigos = "SELECT * from amigos " +
+                               "where idUser1 = "+id+" AND idUser2 = "+like;
+            Conj_Registros = Sentencia_SQL.executeQuery(sonAmigos);
+            while(Conj_Registros.next()){
+                cont++;
+            }
+            System.out.println(cont+"CONTADOOOOOR");
+            if(cont <= 0){
+                String Sentencia = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+id+" , "+like+"  )";
 
 
-            cont  =  Sentencia_SQL.executeUpdate(Sentencia);
-           
-            String Sentencia1 = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+like+" , "+id+"  )";
-            
-            contS  =  Sentencia_SQL.executeUpdate(Sentencia1);
+                cont  =  Sentencia_SQL.executeUpdate(Sentencia);
+
+                String Sentencia1 = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+like+" , "+id+"  )";
+
+                contS  =  Sentencia_SQL.executeUpdate(Sentencia1);
+            }
             
         } catch (SQLException ex) {
             
@@ -569,9 +702,6 @@ public class Conexion {
         return cont;
         
     }
-    
-    
-    
     //---------------------------------------------------------
     public void cerrarConexion() {
         try {
