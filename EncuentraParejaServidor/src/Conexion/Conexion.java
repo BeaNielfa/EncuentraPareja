@@ -91,7 +91,7 @@ public class Conexion {
         return id;
     }
     
-    public void activarUsuario(String email, int activado){
+    public synchronized void activarUsuario(String email, int activado){
         try {
             this.abrirConexion();
             if(activado == 0){
@@ -107,7 +107,7 @@ public class Conexion {
         }
     }
     
-    public void actualizarUsuario (Usuario usuario, String id){
+    public synchronized void actualizarUsuario (Usuario usuario, String id){
         try {
             
             int tipo ;
@@ -260,7 +260,7 @@ public class Conexion {
         
     }
     
-    public void eliminarUsuario (String email){
+    public synchronized void eliminarUsuario (String email){
         try {
             //PRIMERO OBTENEMOS EL ID DE ESE USUARIO 
             String id = obtenerId(email);
@@ -328,7 +328,7 @@ public class Conexion {
         return u;
         
     }
-     public void actualizarPrivilegios (Privilegios p, String id){
+     public synchronized void actualizarPrivilegios (Privilegios p, String id){
         try {
             
             this.abrirConexion();
@@ -417,7 +417,7 @@ public class Conexion {
         
     }
     
-     public void actualizarPreferencias (Preferencias p, String id){
+     public synchronized void actualizarPreferencias (Preferencias p, String id){
         try {
             
             this.abrirConexion();
@@ -600,20 +600,12 @@ public class Conexion {
         try {
             this.abrirConexion();
             
-           // if(tipo == 0){
+           
                  sentencia = "SELECT * "
                     + "FROM likes "
                     + "WHERE  idUser1 = "+id
                     + " AND idUser2 = "+like;
                     
-           // }else{
-//                 sentencia = "SELECT * "
-//                    + "FROM likes "
-//                    + "WHERE  idUser1 = "+id
-//                    + " AND idUser2 = "+like
-//                    + " OR idUser1= "+like+" AND idUser2 = "+id;
-           // }
-            
             Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
             while (Conj_Registros.next()) {
                 cont++;
@@ -628,7 +620,7 @@ public class Conexion {
     }
       
       
-      public void borrarLike (String id, String like){
+      public synchronized void borrarLike (String id, String like){
   
         try {
             this.abrirConexion();
