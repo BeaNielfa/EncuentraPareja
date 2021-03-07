@@ -421,7 +421,7 @@ public class Conexion {
         try {
             
             this.abrirConexion();
-            System.out.println(id+" IDDDDDDDDDD ");
+            
             String update1 = "UPDATE preferencias SET RELACION = '"+p.getRelacion()+"' , "
                     + "DEPORTE = "+p.getDeporte()+" , "
                     +"POLITICA = "+p.getPolitica()+" , "+
@@ -488,7 +488,7 @@ public class Conexion {
             Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
             while (Conj_Registros.next()) {
                 lp.add(new Usuario(Conj_Registros.getString(1), Conj_Registros.getString(2), Conj_Registros.getString(3)));
-                System.out.println("EHHHHHH"+Conj_Registros.getString(1)+Conj_Registros.getString(2)+ Conj_Registros.getString(3));
+               
             }
         } catch (SQLException ex) {
         }
@@ -520,29 +520,6 @@ public class Conexion {
         
     }
     
-      public int seGustan (String id, String like){
-       int cont = 0;
-        try {
-            this.abrirConexion();
-            //select * from likes where idUser1 = 61 and idUser2 = 64;
-            String sentencia = "SELECT * "
-                    + "FROM likes "
-                    + "WHERE  idUser1 = "+id
-                    + " AND idUser2 = "+like;
-            
-            
-            Conj_Registros = Sentencia_SQL.executeQuery(sentencia);
-            while (Conj_Registros.next()) {
-                cont++;
-            }
-            System.out.println(cont+" CONTADOOOOOOOR");
-            this.cerrarConexion();
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cont;
-        
-    }
       
      //----------------------------------------------------------
     public ArrayList obtenerUsuariosLikesTablaArrayList(String id, int tipo) {
@@ -622,13 +599,13 @@ public class Conexion {
        String sentencia ="";
         try {
             this.abrirConexion();
-            //select * from likes where idUser1 = 61 and idUser2 = 64;
+            
             if(tipo == 0){
                  sentencia = "SELECT * "
                     + "FROM likes "
                     + "WHERE  idUser1 = "+id
                     + " AND idUser2 = "+like;
-                    //+ " OR idUser1= "+like+"AND idUser2 = "+id;
+                    
             }else{
                  sentencia = "SELECT * "
                     + "FROM likes "
@@ -641,7 +618,7 @@ public class Conexion {
             while (Conj_Registros.next()) {
                 cont++;
             }
-           // System.out.println(cont+" CONTADOOOOOOOR");
+           
             this.cerrarConexion();
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
@@ -655,8 +632,7 @@ public class Conexion {
   
         try {
             this.abrirConexion();
-//           String sentencia1 = "DELETE FROM ROLSASIGNADOS WHERE IDUSER = "+id;
-//            Sentencia_SQL.executeUpdate(sentencia1);
+
             String sentencia = "DELETE FROM LIKES WHERE idUser1 = "+id +" AND idUser2 = "+like;
             
             
@@ -682,7 +658,7 @@ public class Conexion {
             while(Conj_Registros.next()){
                 cont++;
             }
-            System.out.println(cont+"CONTADOOOOOR");
+            
             if(cont <= 0){
                 String Sentencia = "INSERT INTO AMIGOS (idUser1, idUser2) VALUES ( "+id+" , "+like+"  )";
 
