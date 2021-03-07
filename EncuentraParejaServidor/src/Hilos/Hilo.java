@@ -272,9 +272,9 @@ public class Hilo extends Thread {
                                                 c.insertarLike(idPrincipal, idLike);
                                             }
                                             gustan = c.seGustan(idPrincipal, idLike,1);
-                                            System.out.println("GUSTAN "+gustan);
+                                            
                                             if(gustan > 0){
-                                                System.out.println("VAN A HACERSE AMIGOS");
+                                                
                                                 c.hacerseAmigos(idPrincipal, idLike);
                                             }
                                             break;
