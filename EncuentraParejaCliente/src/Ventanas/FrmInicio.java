@@ -148,6 +148,11 @@ public class FrmInicio extends javax.swing.JFrame {
         });
 
         btnListaLikes.setText("Lista Likes");
+        btnListaLikes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaLikesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -308,6 +313,22 @@ public class FrmInicio extends javax.swing.JFrame {
       
 
     }//GEN-LAST:event_btnLikeActionPerformed
+
+    private void btnListaLikesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaLikesActionPerformed
+        try {
+            // TODO add your handling code here:
+            DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+            dos.writeBoolean(true);
+            dos.writeInt(4);
+            this.setVisible(false);
+            FrmListaLikes fl = new FrmListaLikes(servidor, claves, serverKey);
+            fl.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnListaLikesActionPerformed
 
     
 
