@@ -13,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -145,10 +146,18 @@ public class FrmLogin extends javax.swing.JFrame {
                 Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
                 boolean existe = dis.readBoolean();
                 if(existe){
-                    String tipo = dis.readUTF();
-                    int acti = dis.readInt();
-                    String idUser = dis.readUTF();
-
+                    //String tipo = dis.readUTF();
+                    //RECIBIMOS EL TIPO (ADMIN/USER)
+                    String tipo = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
+                    
+                    //int acti = dis.readInt();
+                    //RECIBIMOS SI ESTA ACTIVADO O NO (1/0)
+                    int acti = Integer.parseInt(Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]));
+                    
+                    //String idUser = dis.readUTF();
+                    //RECIBIMOS EL ID DEL USUARIO LOGUEADO
+                    String idUser = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
+                   
                     if(acti == 0){
 
 

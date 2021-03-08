@@ -12,10 +12,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SealedObject;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -35,7 +37,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     /**
      * Creates new form FrmAdmin
      */
-    public FrmAdmin(Socket servidor, Object[] claves, PublicKey serverKey, String id) throws IOException, ClassNotFoundException {
+    public FrmAdmin(Socket servidor, Object[] claves, PublicKey serverKey, String id) throws IOException, ClassNotFoundException, Exception {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
@@ -59,8 +61,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         Icon icono1 = new ImageIcon(priv.getScaledInstance(btnPrivilegios.getWidth(), btnPrivilegios.getHeight(), Image.SCALE_DEFAULT));
         btnPrivilegios.setIcon(icono1);
         
-        Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
-        
+        //Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        Privilegios p = (Privilegios)Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
         if(p.getActivar() == 0){
             
             btnActivar.setEnabled(false);

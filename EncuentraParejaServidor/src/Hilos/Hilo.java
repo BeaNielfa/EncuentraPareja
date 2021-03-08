@@ -119,15 +119,18 @@ public class Hilo extends Thread {
                         if (existe) {//SI EL USUARIO EXISTE
 
                             String tipo = c.obtenerTipoUser(idPrincipal);//OBTENEMOS EL TIPO DE USUARIO 
-                            enviar.writeUTF(tipo);
+                            //enviar.writeUTF(tipo);
+                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarAsimetrico(tipo, clientKey));
                             int activado = c.isActivado(idPrincipal);//OBTENEMOS SI ESTA ACTIVADO O NO 
-                            enviar.writeInt(activado);
-                            enviar.writeUTF(idPrincipal);
-                            
+                            //enviar.writeInt(activado);
+                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarAsimetrico(String.valueOf(activado), clientKey));
+                            //enviar.writeUTF(idPrincipal);
+                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarAsimetrico(idPrincipal, clientKey));
                             if (tipo.equals("Admin")) {
                                 
                                 Privilegios pr = c.cogerPrivilegios(idPrincipal);
-                                Utilidades.Util.enviarObject(cliente, pr);
+                                //Utilidades.Util.enviarObject(cliente, pr);
+                                Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
                                 
                                 ArrayList lu = new ArrayList();
                                 lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
