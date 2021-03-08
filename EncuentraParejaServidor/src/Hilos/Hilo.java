@@ -290,13 +290,14 @@ public class Hilo extends Thread {
                                             //String email = recibir.readUTF();
                                             String email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idLike = c.obtenerId(email);
-                                            int gustan = c.seGustan(idPrincipal, idLike);
+                                            int gustan = c.seGustan(idPrincipal, idLike);//COMPROBAMOS SI LE GUSTA O NO
                                             
-                                            if(gustan > 0){
-                                                c.borrarLike(idPrincipal, idLike);
-                                            }else{
-                                                c.insertarLike(idPrincipal, idLike);
+                                            if(gustan > 0){//SI YA LE GUSTABA
+                                                c.borrarLike(idPrincipal, idLike);//QUITAMOS EL LIKE
+                                            }else{//SI NO LE GUSTA
+                                                c.insertarLike(idPrincipal, idLike);//HACEMOS LIKE
                                             }
+                                            //COMPROBAMOS SI AMBOS SE GUSTAN PARA QUE SE HAGAN AMIGOS
                                             gustan = c.seGustan(idPrincipal, idLike);
                                             int gustanLike = c.seGustan(idLike, idPrincipal);
                                             if(gustan > 0 && gustanLike >0){
@@ -305,10 +306,12 @@ public class Hilo extends Thread {
                                             }
                                             break;
                                         case 4://MOSTRAR QUE USUARIOS ME GUSTAN Y A CUALES LES GUSTO YO
+                                            //USUARIOS QUE ME GUSTAN
                                             ArrayList likes = new ArrayList();
                                             likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             
+                                            //USUARIOS QUE LES GUSTO
                                             likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,1);
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             break;
@@ -327,23 +330,23 @@ public class Hilo extends Thread {
                                             likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             break;
-                                        case 7:
+                                        case 7://DAR LIKE
                                             
                                             //email = recibir.readUTF();
                                             email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             idLike = c.obtenerId(email);
                                             gustan = c.seGustan(idPrincipal, idLike);
-                                            if(gustan >0){
+                                            if(gustan >0){//SI YA LE GUSTABA INDICARA QUE EL USUARIO YA LE GUSTA
                                                 
                                                 enviar.writeInt(0);
-                                            }else{
+                                            }else{//SI NO INSERTARA EL LIKE EN LA BBDD
                                                 enviar.writeInt(1);
                                                 c.insertarLike(idPrincipal, idLike);
                                             }
                                             likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             break;
-                                        case 8:
+                                        case 8://LISTAR AMIGOS
                                             ArrayList amigos = new ArrayList();
                                             amigos = c.obtenerAmigos(idPrincipal);
                                             Utilidades.Util.enviarObject(cliente, amigos);

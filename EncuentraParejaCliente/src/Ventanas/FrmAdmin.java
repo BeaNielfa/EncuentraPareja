@@ -406,6 +406,8 @@ public class FrmAdmin extends javax.swing.JFrame {
                     Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 
