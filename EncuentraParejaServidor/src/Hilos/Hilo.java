@@ -158,7 +158,8 @@ public class Hilo extends Thread {
                                             break;
                                         case 1://DAR DE BAJA UN USUARIO (ELIMINAR)
 
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             c.eliminarUsuario(email);
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY

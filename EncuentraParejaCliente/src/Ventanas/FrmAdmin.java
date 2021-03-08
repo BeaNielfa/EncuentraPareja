@@ -298,11 +298,11 @@ public class FrmAdmin extends javax.swing.JFrame {
                     dos.writeBoolean(true);
                     dos.writeInt(1);//1 BORRAR
                     
-                    String nombre = (String)tabla.getValueAt(filaseleccionada, 2);
-                    System.out.println(nombre+" Nombre");
+                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                   
 
-                     dos.writeUTF(nombre);
-                     
+                     //dos.writeUTF(email);
+                    Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
                     
                     ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
                     System.out.println("LISTA RECIBIDA");
@@ -313,6 +313,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         } catch (IOException ex) {
             
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
        
