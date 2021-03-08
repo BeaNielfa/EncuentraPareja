@@ -373,7 +373,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             // TODO add your handling code here:
             DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
             dos.writeBoolean(true);
-            dos.writeInt(3);//3 AÑADIR USUARIO
+            dos.writeInt(3);//3 AÑADIR USUARIO ADMINISTRADOR
             this.setVisible(false);
             FrmAddUser fa = new FrmAddUser(servidor,claves, serverKey,idUser);
             fa.setVisible(true);

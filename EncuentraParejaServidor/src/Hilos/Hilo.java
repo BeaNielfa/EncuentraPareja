@@ -191,7 +191,7 @@ public class Hilo extends Thread {
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
-                                        case 3://INSERTAR UN USUARIO 
+                                        case 3://INSERTAR UN USUARIO ADMINISTRADOR
                                             //RECIBIMOS EL USUARIO A INSERTAR
                                             u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
 
@@ -209,7 +209,9 @@ public class Hilo extends Thread {
                                             //ENVIAMOS SI TODO HA IDO BIEN O NO
                                             enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
                                             
-                                            Utilidades.Util.enviarObject(cliente, pr);
+                                            //Utilidades.Util.enviarObject(cliente, pr);
+                                            pr = c.cogerPrivilegios(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
