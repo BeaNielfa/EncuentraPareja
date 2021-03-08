@@ -257,8 +257,10 @@ public class Hilo extends Thread {
                                             break;
                                         case 1://MODIFICAR NUESTRO PERFIL
                                             u = c.cogerUsuario(idPrincipal);//COGEMOS NUESTRA INFORMACION
-                                            Utilidades.Util.enviarObject(cliente, u);//LA ENVIAMOS PARA PODER VERLA
-                                            u = (Usuario) Utilidades.Util.recibirObjeto(cliente);//RECIBIMOS EL OBJETO CON LOS CAMBIOS
+                                            //Utilidades.Util.enviarObject(cliente, u);//LA ENVIAMOS PARA PODER VERLA
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(u, clientKey));
+                                            //u = (Usuario) Utilidades.Util.recibirObjeto(cliente);//RECIBIMOS EL OBJETO CON LOS CAMBIOS
+                                            u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
                                             c.actualizarUsuario(u, idPrincipal);
