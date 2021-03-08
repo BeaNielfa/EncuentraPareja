@@ -272,9 +272,11 @@ public class Hilo extends Thread {
                                             break;
                                         case 2://ACTUALIZAR PREFERENCIAS
                                             pre = c.cogerPreferencias(idPrincipal);//RECOGEMOS LAS PREFERENCIAS 
-                                            Utilidades.Util.enviarObject(cliente, pre);//LAS MANDAMOS PARA PODER VERLAS
+                                            //Utilidades.Util.enviarObject(cliente, pre);//LAS MANDAMOS PARA PODER VERLAS
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pre, clientKey));
                                             
-                                            Preferencias pref = (Preferencias) Utilidades.Util.recibirObjeto(cliente);//RECOGEMOS LAS PREFERENCIAS CAMBIADAS
+                                            //Preferencias pref = (Preferencias) Utilidades.Util.recibirObjeto(cliente);//RECOGEMOS LAS PREFERENCIAS CAMBIADAS
+                                            Preferencias pref = (Preferencias) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             c.actualizarPreferencias(pref, idPrincipal);//ACTUALIZAMOS
                                             
                                             
