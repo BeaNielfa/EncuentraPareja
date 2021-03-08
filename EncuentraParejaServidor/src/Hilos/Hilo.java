@@ -317,7 +317,8 @@ public class Hilo extends Thread {
                                             Utilidades.Util.enviarObject(cliente, us);
                                             break;
                                         case 6://BORRAR LIKE
-                                            email = recibir.readUTF();
+                                            //email = recibir.readUTF();
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             idLike = c.obtenerId(email);
                                             
                                             c.borrarLike(idPrincipal, idLike);
@@ -327,7 +328,8 @@ public class Hilo extends Thread {
                                             break;
                                         case 7:
                                             
-                                            email = recibir.readUTF();
+                                            //email = recibir.readUTF();
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             idLike = c.obtenerId(email);
                                             gustan = c.seGustan(idPrincipal, idLike);
                                             if(gustan >0){
