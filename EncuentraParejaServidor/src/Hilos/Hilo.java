@@ -167,20 +167,25 @@ public class Hilo extends Thread {
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
                                         case 2://MODIFICAR UN USUARIO
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idMod = c.obtenerId(email);
                                             Usuario us = c.cogerUsuario(idMod);//RECOGEMOS SUS DATOS
 
                                             //MANDAMOS EL USUARIO PARA QUE PUEDA TENER ACCESO A SUS DATOS
-                                            Utilidades.Util.enviarObject(cliente, us);
-
+                                            //Utilidades.Util.enviarObject(cliente, us);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(us, clientKey));
                                             //RECIBIMOS EL USUARIO CON LOS CAMBIOS
-                                            us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
-
+                                            //us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
+                                            us = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
+                                            
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
                                             c.actualizarUsuario(us, idMod);
                                             
-                                            Utilidades.Util.enviarObject(cliente, pr);
+                                            
+                                            //Utilidades.Util.enviarObject(cliente, pr);
+                                            pr = c.cogerPrivilegios(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS

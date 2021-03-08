@@ -268,7 +268,7 @@ public class FrmAdmin extends javax.swing.JFrame {
                 dos.writeBoolean(true);
                 dos.writeInt(2);//2 MODIFICAR
                 String email = (String)tabla.getValueAt(filaseleccionada, 2);
-                //System.out.println(email+" Nombre");
+                
 
                 this.setVisible(false);
                 FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email,idUser);
@@ -281,6 +281,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnModActionPerformed
