@@ -286,7 +286,8 @@ public class Hilo extends Thread {
                                             break;
                                         case 3://LIKE
                                             
-                                            String email = recibir.readUTF();
+                                            //String email = recibir.readUTF();
+                                            String email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idLike = c.obtenerId(email);
                                             int gustan = c.seGustan(idPrincipal, idLike);
                                             

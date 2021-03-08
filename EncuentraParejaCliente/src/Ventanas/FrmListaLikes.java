@@ -313,7 +313,7 @@ public class FrmListaLikes extends javax.swing.JFrame {
                 String email = (String)tablaGustar.getValueAt(filaseleccionada, 1);
                  
                 dos.writeUTF(email);
-                
+               // Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
                 int result = dis.readInt();
                 if(result == 0){
                     JOptionPane.showMessageDialog(null, "Ya le gusta este Usuario");
