@@ -212,12 +212,15 @@ public class FrmTodosUsuarios extends javax.swing.JFrame {
                     dos.writeBoolean(true);
                     dos.writeInt(3);//LIKE
                     String email = (String)tabla.getValueAt(filaseleccionada, 1);
-                    dos.writeUTF(email);
+                    //dos.writeUTF(email);
+                    Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
                     
                     JOptionPane.showMessageDialog(null, "Su solicitud ha sido procesada");
             }
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(FrmTodosUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }//GEN-LAST:event_btnLikeActionPerformed
 

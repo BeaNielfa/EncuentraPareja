@@ -11,9 +11,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SealedObject;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
@@ -32,7 +34,7 @@ public class FrmPreferencias extends javax.swing.JFrame {
     /**
      * Creates new form FrmPreferencias
      */
-    public FrmPreferencias(Socket servidor, Object[] claves, PublicKey serverKey, int tipo) throws IOException, ClassNotFoundException {
+    public FrmPreferencias(Socket servidor, Object[] claves, PublicKey serverKey, int tipo) throws IOException, ClassNotFoundException, Exception {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
@@ -64,7 +66,8 @@ public class FrmPreferencias extends javax.swing.JFrame {
         
         
         if (tipo != 0){//CUANDO EL TIPO ES DISTINTO A 0 RECOGEMOS LAS PREFERENCIAS DEL USUARIO A ACTUALIZAR
-            Preferencias p = (Preferencias)Utilidades.Util.recibirObjeto(servidor);
+            //Preferencias p = (Preferencias)Utilidades.Util.recibirObjeto(servidor);
+            Preferencias p = (Preferencias) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
             if(p.getHijos().equals("Quiere")){
                 jrbQuiere.setSelected(true);
             }else if(p.getHijos().equals("Tiene")){
@@ -312,7 +315,8 @@ public class FrmPreferencias extends javax.swing.JFrame {
             DataInputStream dis = new DataInputStream(servidor.getInputStream());
            
             Preferencias p = new Preferencias(relacion, deporte, politica, arte, hijos, interes);
-            Utilidades.Util.enviarObject(servidor, p);
+            //Utilidades.Util.enviarObject(servidor, p);
+            Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(p, serverKey));
             
             
             if(tipo == 0){
@@ -333,6 +337,8 @@ public class FrmPreferencias extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(FrmPreferencias.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmPreferencias.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmPreferencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed

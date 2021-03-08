@@ -10,9 +10,11 @@ import java.awt.Image;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SealedObject;
 import javax.swing.ImageIcon;
 
 /**
@@ -30,7 +32,7 @@ public class FrmModificar extends javax.swing.JFrame {
     /**
      * Creates new form FrmModificar
      */
-    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey, String email, String id) throws IOException, ClassNotFoundException {
+    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey, String email, String id) throws IOException, ClassNotFoundException, Exception {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
@@ -47,10 +49,12 @@ public class FrmModificar extends javax.swing.JFrame {
         
         
         
-        DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
-        dos.writeUTF(email);
+        //DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+        //dos.writeUTF(email);
+        Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
 
-        Usuario u = (Usuario) Utilidades.Util.recibirObjeto(servidor);
+        //Usuario u = (Usuario) Utilidades.Util.recibirObjeto(servidor);
+        Usuario u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
 
         txtNombre.setText(u.getNombre());
         txtApellidos.setText(u.getApellidos());
@@ -59,7 +63,7 @@ public class FrmModificar extends javax.swing.JFrame {
         
     }
     
-    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey) throws IOException, ClassNotFoundException {
+    public FrmModificar(Socket servidor, Object[] claves, PublicKey serverKey) throws IOException, ClassNotFoundException, Exception {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
@@ -74,8 +78,8 @@ public class FrmModificar extends javax.swing.JFrame {
 
        
 
-        Usuario u = (Usuario) Utilidades.Util.recibirObjeto(servidor);
-
+        //Usuario u = (Usuario) Utilidades.Util.recibirObjeto(servidor);
+        Usuario u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
         txtNombre.setText(u.getNombre());
         txtApellidos.setText(u.getApellidos());
         txtEmail.setText(u.getEmail());
@@ -205,7 +209,8 @@ public class FrmModificar extends javax.swing.JFrame {
             String em = txtEmail.getText();
             
             Usuario u = new Usuario(nombre, apellidos, em);
-            Utilidades.Util.enviarObject(servidor, u);
+            //Utilidades.Util.enviarObject(servidor, u);
+            Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(u, serverKey));
             
             
             this.setVisible(false);
@@ -219,6 +224,8 @@ public class FrmModificar extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed

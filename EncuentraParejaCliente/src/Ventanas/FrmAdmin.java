@@ -12,10 +12,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SealedObject;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -35,7 +37,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     /**
      * Creates new form FrmAdmin
      */
-    public FrmAdmin(Socket servidor, Object[] claves, PublicKey serverKey, String id) throws IOException, ClassNotFoundException {
+    public FrmAdmin(Socket servidor, Object[] claves, PublicKey serverKey, String id) throws IOException, ClassNotFoundException, Exception {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
@@ -59,7 +61,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         Icon icono1 = new ImageIcon(priv.getScaledInstance(btnPrivilegios.getWidth(), btnPrivilegios.getHeight(), Image.SCALE_DEFAULT));
         btnPrivilegios.setIcon(icono1);
         
-        Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        //Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        Privilegios p = (Privilegios) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
         
         if(p.getActivar() == 0){
             
@@ -81,7 +84,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         
         
         ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
-        
+        //ArrayList lu = (ArrayList) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
         
         rellenarTabla(lu);
     }
@@ -265,7 +268,7 @@ public class FrmAdmin extends javax.swing.JFrame {
                 dos.writeBoolean(true);
                 dos.writeInt(2);//2 MODIFICAR
                 String email = (String)tabla.getValueAt(filaseleccionada, 2);
-                //System.out.println(email+" Nombre");
+                
 
                 this.setVisible(false);
                 FrmModificar fm = new FrmModificar(servidor,claves, serverKey,email,idUser);
@@ -278,6 +281,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnModActionPerformed
@@ -295,11 +300,11 @@ public class FrmAdmin extends javax.swing.JFrame {
                     dos.writeBoolean(true);
                     dos.writeInt(1);//1 BORRAR
                     
-                    String nombre = (String)tabla.getValueAt(filaseleccionada, 2);
-                    System.out.println(nombre+" Nombre");
+                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                   
 
-                     dos.writeUTF(nombre);
-                     
+                     //dos.writeUTF(email);
+                    Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
                     
                     ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
                     System.out.println("LISTA RECIBIDA");
@@ -310,6 +315,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         } catch (IOException ex) {
             
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
        
@@ -327,11 +334,11 @@ public class FrmAdmin extends javax.swing.JFrame {
                     DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
                     dos.writeBoolean(true);
                     dos.writeInt(0);//0 ACTIVAR
-                    String nombre = (String)tabla.getValueAt(filaseleccionada, 2);
-                    System.out.println(nombre+" Nombre");
+                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                    
 
-                     dos.writeUTF(nombre);
-                     
+                    //dos.writeUTF(email);
+                    Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
                     
                     ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
                     System.out.println("LISTA RECIBIDA");
@@ -342,6 +349,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } 
       
@@ -364,7 +373,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             // TODO add your handling code here:
             DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
             dos.writeBoolean(true);
-            dos.writeInt(3);//3 AÑADIR USUARIO
+            dos.writeInt(3);//3 AÑADIR USUARIO ADMINISTRADOR
             this.setVisible(false);
             FrmAddUser fa = new FrmAddUser(servidor,claves, serverKey,idUser);
             fa.setVisible(true);

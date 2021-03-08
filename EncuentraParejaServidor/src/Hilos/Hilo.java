@@ -97,7 +97,8 @@ public class Hilo extends Thread {
 
                         if (insertado) {
                             
-                            Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
+                            //Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
+                            Preferencias p = (Preferencias) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
 
                             int insertPreferencias = c.insertarPreferencia(idUsuarioNuevo, p);
 
@@ -119,20 +120,25 @@ public class Hilo extends Thread {
                         if (existe) {//SI EL USUARIO EXISTE
 
                             String tipo = c.obtenerTipoUser(idPrincipal);//OBTENEMOS EL TIPO DE USUARIO 
-                            enviar.writeUTF(tipo);
+                            //enviar.writeUTF(tipo);
+                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarAsimetrico(tipo, clientKey));
                             int activado = c.isActivado(idPrincipal);//OBTENEMOS SI ESTA ACTIVADO O NO 
-                            enviar.writeInt(activado);
-                            enviar.writeUTF(idPrincipal);
-                            
+                            //enviar.writeInt(activado);
+                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarAsimetrico(String.valueOf(activado), clientKey));
+                            //enviar.writeUTF(idPrincipal);
+                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarAsimetrico(idPrincipal, clientKey));
                             if (tipo.equals("Admin")) {
                                 
                                 Privilegios pr = c.cogerPrivilegios(idPrincipal);
-                                Utilidades.Util.enviarObject(cliente, pr);
+                                //Utilidades.Util.enviarObject(cliente, pr);
+                                Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
+                                
                                 
                                 ArrayList lu = new ArrayList();
                                 lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                 //ENVIAMOS LA LISTA DE USUARIOS
                                 Utilidades.Util.enviarObject(cliente, lu);
+                                //Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(lu, clavepubl));
 
                                 while (recibir.readBoolean()) {
                                     int opc = recibir.readInt();
@@ -140,7 +146,8 @@ public class Hilo extends Thread {
                                     switch (opc) {
                                         case 0://ACTIVAR USUARIO
 
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE ACTIVAR
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE ACTIVAR
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idAct = c.obtenerId(email);
                                             activado = c.isActivado(idAct);
                                             c.activarUsuario(email, activado);
@@ -152,7 +159,8 @@ public class Hilo extends Thread {
                                             break;
                                         case 1://DAR DE BAJA UN USUARIO (ELIMINAR)
 
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE DAR DE BAJA
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             c.eliminarUsuario(email);
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
@@ -160,26 +168,31 @@ public class Hilo extends Thread {
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
                                         case 2://MODIFICAR UN USUARIO
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE MODIFICAR
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idMod = c.obtenerId(email);
                                             Usuario us = c.cogerUsuario(idMod);//RECOGEMOS SUS DATOS
 
                                             //MANDAMOS EL USUARIO PARA QUE PUEDA TENER ACCESO A SUS DATOS
-                                            Utilidades.Util.enviarObject(cliente, us);
-
+                                            //Utilidades.Util.enviarObject(cliente, us);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(us, clientKey));
                                             //RECIBIMOS EL USUARIO CON LOS CAMBIOS
-                                            us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
-
+                                            //us = (Usuario) Utilidades.Util.recibirObjeto(cliente);
+                                            us = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
+                                            
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
                                             c.actualizarUsuario(us, idMod);
                                             
-                                            Utilidades.Util.enviarObject(cliente, pr);
+                                            
+                                            //Utilidades.Util.enviarObject(cliente, pr);
+                                            pr = c.cogerPrivilegios(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
-                                        case 3://INSERTAR UN USUARIO 
+                                        case 3://INSERTAR UN USUARIO ADMINISTRADOR
                                             //RECIBIMOS EL USUARIO A INSERTAR
                                             u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
 
@@ -197,23 +210,31 @@ public class Hilo extends Thread {
                                             //ENVIAMOS SI TODO HA IDO BIEN O NO
                                             enviar.writeBoolean(insertado);//ENVIAMOS SI EL REGISTRO SE HA CREADO CORRECTAMENTE O NO
                                             
-                                            Utilidades.Util.enviarObject(cliente, pr);
+                                            //Utilidades.Util.enviarObject(cliente, pr);
+                                            pr = c.cogerPrivilegios(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
                                             //ACTUALIZAMOS LA LISTA
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
                                             break;
                                         case 4://CAMBIAR PRIVILEGIOS
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY CAMBIARLE LOS PRIVILEGIOS
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY CAMBIARLE LOS PRIVILEGIOS
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String id = c.obtenerId(email);
                                             
                                             Privilegios priv = c.cogerPrivilegios(id);
-                                            Utilidades.Util.enviarObject(cliente, priv);//ENVIAMOS LOS PRIVILEGIOS QUE TIENE ESE USUARIO
+                                            //Utilidades.Util.enviarObject(cliente, priv);//ENVIAMOS LOS PRIVILEGIOS QUE TIENE ESE USUARIO
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(priv, clientKey));
                                             
-                                            priv = (Privilegios) Utilidades.Util.recibirObjeto(cliente);
+                                            //priv = (Privilegios) Utilidades.Util.recibirObjeto(cliente);
+                                            priv = (Privilegios) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             c.actualizarPrivilegios(priv, id);
                                             
-                                            Utilidades.Util.enviarObject(cliente, pr);
+                                            //Utilidades.Util.enviarObject(cliente, pr);
+                                            pr = c.cogerPrivilegios(idPrincipal);
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
+                                            
                                             lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                             //ENVIAMOS LA LISTA DE USUARIOS
                                             Utilidades.Util.enviarObject(cliente, lu);
@@ -237,8 +258,10 @@ public class Hilo extends Thread {
                                             break;
                                         case 1://MODIFICAR NUESTRO PERFIL
                                             u = c.cogerUsuario(idPrincipal);//COGEMOS NUESTRA INFORMACION
-                                            Utilidades.Util.enviarObject(cliente, u);//LA ENVIAMOS PARA PODER VERLA
-                                            u = (Usuario) Utilidades.Util.recibirObjeto(cliente);//RECIBIMOS EL OBJETO CON LOS CAMBIOS
+                                            //Utilidades.Util.enviarObject(cliente, u);//LA ENVIAMOS PARA PODER VERLA
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(u, clientKey));
+                                            //u = (Usuario) Utilidades.Util.recibirObjeto(cliente);//RECIBIMOS EL OBJETO CON LOS CAMBIOS
+                                            u = (Usuario) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             
                                             //ACTUALIZAMOS EL USUARIO EN LA BBDD
                                             c.actualizarUsuario(u, idPrincipal);
@@ -250,9 +273,11 @@ public class Hilo extends Thread {
                                             break;
                                         case 2://ACTUALIZAR PREFERENCIAS
                                             pre = c.cogerPreferencias(idPrincipal);//RECOGEMOS LAS PREFERENCIAS 
-                                            Utilidades.Util.enviarObject(cliente, pre);//LAS MANDAMOS PARA PODER VERLAS
+                                            //Utilidades.Util.enviarObject(cliente, pre);//LAS MANDAMOS PARA PODER VERLAS
+                                            Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pre, clientKey));
                                             
-                                            Preferencias pref = (Preferencias) Utilidades.Util.recibirObjeto(cliente);//RECOGEMOS LAS PREFERENCIAS CAMBIADAS
+                                            //Preferencias pref = (Preferencias) Utilidades.Util.recibirObjeto(cliente);//RECOGEMOS LAS PREFERENCIAS CAMBIADAS
+                                            Preferencias pref = (Preferencias) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             c.actualizarPreferencias(pref, idPrincipal);//ACTUALIZAMOS
                                             
                                             
@@ -262,7 +287,8 @@ public class Hilo extends Thread {
                                             break;
                                         case 3://LIKE
                                             
-                                            String email = recibir.readUTF();
+                                            //String email = recibir.readUTF();
+                                            String email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idLike = c.obtenerId(email);
                                             int gustan = c.seGustan(idPrincipal, idLike);
                                             
@@ -292,7 +318,8 @@ public class Hilo extends Thread {
                                             Utilidades.Util.enviarObject(cliente, us);
                                             break;
                                         case 6://BORRAR LIKE
-                                            email = recibir.readUTF();
+                                            //email = recibir.readUTF();
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             idLike = c.obtenerId(email);
                                             
                                             c.borrarLike(idPrincipal, idLike);
@@ -302,7 +329,8 @@ public class Hilo extends Thread {
                                             break;
                                         case 7:
                                             
-                                            email = recibir.readUTF();
+                                            //email = recibir.readUTF();
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             idLike = c.obtenerId(email);
                                             gustan = c.seGustan(idPrincipal, idLike);
                                             if(gustan >0){

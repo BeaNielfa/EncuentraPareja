@@ -10,9 +10,11 @@ import java.awt.Image;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SealedObject;
 import javax.swing.ImageIcon;
 
 /**
@@ -30,7 +32,7 @@ public class FrmPrivilegios extends javax.swing.JFrame {
     /**
      * Creates new form FrmPrivilegios
      */
-    public FrmPrivilegios(Socket servidor, Object[] claves, PublicKey serverKey, String id, String email) throws IOException, ClassNotFoundException {
+    public FrmPrivilegios(Socket servidor, Object[] claves, PublicKey serverKey, String id, String email) throws IOException, ClassNotFoundException, Exception {
         initComponents();
         this.servidor = servidor;
         this.claves = claves;
@@ -45,10 +47,12 @@ public class FrmPrivilegios extends javax.swing.JFrame {
         Image imgIcon = new ImageIcon(getClass().getResource("/Imagenes/ico.png")).getImage();
         setIconImage(imgIcon);
 
-        DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
-        dos.writeUTF(email);
+        //DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+        //dos.writeUTF(email);
+        Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
 
-        Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        //Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        Privilegios p = (Privilegios) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
 
         if (p.getActivar() == 1) {
 
@@ -240,7 +244,8 @@ public class FrmPrivilegios extends javax.swing.JFrame {
             }
             
             Privilegios p = new Privilegios(activar, mod,alta, baja, cambiar);
-            Utilidades.Util.enviarObject(servidor, p);
+            //Utilidades.Util.enviarObject(servidor, p);
+            Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarObjeto(p, serverKey));
             
             this.setVisible(false);
             FrmAdmin f = new FrmAdmin(servidor, claves, serverKey, idUser);
@@ -250,7 +255,9 @@ public class FrmPrivilegios extends javax.swing.JFrame {
             Logger.getLogger(FrmPrivilegios.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmPrivilegios.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+             Logger.getLogger(FrmPrivilegios.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }//GEN-LAST:event_btnAplicarActionPerformed
 
    
