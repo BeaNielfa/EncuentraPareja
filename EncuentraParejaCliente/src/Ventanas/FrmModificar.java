@@ -49,7 +49,7 @@ public class FrmModificar extends javax.swing.JFrame {
         
         
         
-        DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
+        //DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
         //dos.writeUTF(email);
         Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
 
