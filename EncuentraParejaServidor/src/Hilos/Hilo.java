@@ -97,7 +97,8 @@ public class Hilo extends Thread {
 
                         if (insertado) {
                             
-                            Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
+                            //Preferencias p = (Preferencias) Utilidades.Util.recibirObjeto(cliente);
+                            Preferencias p = (Preferencias) Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(cliente), clavepri);
 
                             int insertPreferencias = c.insertarPreferencia(idUsuarioNuevo, p);
 
