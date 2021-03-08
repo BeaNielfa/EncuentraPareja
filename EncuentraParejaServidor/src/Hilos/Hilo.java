@@ -343,6 +343,16 @@ public class Hilo extends Thread {
                                                 enviar.writeInt(1);
                                                 c.insertarLike(idPrincipal, idLike);
                                             }
+                                            
+                                            //COMPROBAMOS SI AMBOS SE GUSTAN PARA QUE SE HAGAN AMIGOS
+                                            gustan = c.seGustan(idPrincipal, idLike);
+                                            gustanLike = c.seGustan(idLike, idPrincipal);
+                                            if(gustan > 0 && gustanLike >0){
+                                                
+                                                c.hacerseAmigos(idPrincipal, idLike);
+                                            }
+                                            
+                                            
                                             likes = c.obtenerUsuariosLikesTablaArrayList(idPrincipal,0);
                                             Utilidades.Util.enviarObject(cliente, likes);
                                             break;
