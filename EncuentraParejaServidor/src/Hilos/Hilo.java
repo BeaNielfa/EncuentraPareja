@@ -132,10 +132,12 @@ public class Hilo extends Thread {
                                 //Utilidades.Util.enviarObject(cliente, pr);
                                 Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(pr, clientKey));
                                 
+                                
                                 ArrayList lu = new ArrayList();
                                 lu = c.obtenerUsuariosTablaArrayList(idPrincipal,0);//RECOGEMOS LOS USUARIOS QUE HAY
                                 //ENVIAMOS LA LISTA DE USUARIOS
                                 Utilidades.Util.enviarObject(cliente, lu);
+                                //Utilidades.Util.enviarObject(cliente, Utilidades.Util.cifrarObjeto(lu, clavepubl));
 
                                 while (recibir.readBoolean()) {
                                     int opc = recibir.readInt();
@@ -143,7 +145,8 @@ public class Hilo extends Thread {
                                     switch (opc) {
                                         case 0://ACTIVAR USUARIO
 
-                                            email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE ACTIVAR
+                                            //email = recibir.readUTF();//RECIBIMOS EL EMAIL DEL USUARIO QUE HAY QUE ACTIVAR
+                                            email = Utilidades.Util.desencriptarAsimetrico((byte[]) Utilidades.Util.recibirObjeto(cliente), clavepri);
                                             String idAct = c.obtenerId(email);
                                             activado = c.isActivado(idAct);
                                             c.activarUsuario(email, activado);

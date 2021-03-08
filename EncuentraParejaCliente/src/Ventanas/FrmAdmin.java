@@ -62,7 +62,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnPrivilegios.setIcon(icono1);
         
         //Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
-        Privilegios p = (Privilegios)Utilidades.Util.desencriptarObjeto((SealedObject) Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
+        Privilegios p = (Privilegios) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
+        
         if(p.getActivar() == 0){
             
             btnActivar.setEnabled(false);
@@ -83,7 +84,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         
         
         ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
-        
+        //ArrayList lu = (ArrayList) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
         
         rellenarTabla(lu);
     }
@@ -329,11 +330,11 @@ public class FrmAdmin extends javax.swing.JFrame {
                     DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
                     dos.writeBoolean(true);
                     dos.writeInt(0);//0 ACTIVAR
-                    String nombre = (String)tabla.getValueAt(filaseleccionada, 2);
-                    System.out.println(nombre+" Nombre");
+                    String email = (String)tabla.getValueAt(filaseleccionada, 2);
+                    
 
-                     dos.writeUTF(nombre);
-                     
+                    //dos.writeUTF(email);
+                    Utilidades.Util.enviarObject(servidor, Utilidades.Util.cifrarAsimetrico(email, serverKey));
                     
                     ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
                     System.out.println("LISTA RECIBIDA");
@@ -344,6 +345,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FrmAdmin.class.getName()).log(Level.SEVERE, null, ex);
         } 
       
