@@ -1,0 +1,2 @@
+Indico la contraseña para poder entrar desde el perfil Administrador.
+Todos los Usuarios tienen la misma contraseña: 1234
