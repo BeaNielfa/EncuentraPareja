@@ -14,5 +14,5 @@ public class Constantes {
     
     public static String TablaUsuario = "usuarios";
     
-   // public static String ficheroBitacora = "bitacora.txt";
+   
 }

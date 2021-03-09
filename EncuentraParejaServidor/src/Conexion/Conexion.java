@@ -30,17 +30,8 @@ public class Conexion {
         try {
             //Cargar el driver/controlador
             String controlador = "com.mysql.jdbc.Driver";
-            //String controlador = "oracle.jdbc.driver.OracleDriver";
-            //String controlador = "sun.jdbc.odbc.JdbcOdbcDriver"; 
-            //String controlador = "org.mariadb.jdbc.Driver"; // MariaDB la version libre de MySQL (requiere incluir la librería jar correspondiente).
-            //Class.forName(controlador).newInstance();
             Class.forName(controlador);
             String URL_BD = "jdbc:mysql://localhost/" + Constantes.bbdd;
-            //String URL_BD = "jdbc:mariadb://"+this.servidor+":"+this.puerto+"/"+this.bbdd+"";
-            //String URL_BD = "jdbc:oracle:oci:@REPASO";
-            //String URL_BD = "jdbc:oracle:oci:@REPASO";
-            //String URL_BD = "jdbc:odbc:REPASO";
-
             //Realizamos la conexión a una BD con un usuario y una clave.
             Conex = java.sql.DriverManager.getConnection(URL_BD, Constantes.usuario, Constantes.passwd);
             Sentencia_SQL = Conex.createStatement();
@@ -51,11 +42,17 @@ public class Conexion {
     }
 
     //********************** Métodos **************************
-    //----------------------------------------------------------
-    public int obtener(String nombre, String pass) {
+
+    /**
+     * METODO QUE COMPRUEBA SI UN USUARIO EXISTE
+     * @param nombre
+     * @param pass
+     * @return 
+     */
+    public int comprobarExisteUsuario(String nombre, String pass) {
         this.abrirConexion();
         
-        //CONSULTA PARA SABER SI UN USUARIO EXISTE O NO 
+        
         String Sentencia = "SELECT * FROM " + Constantes.TablaUsuario+" WHERE EMAIL = '"+nombre+"' AND CONTRASEÑA = '"+pass+"'";
         int total = 0;
         try {
@@ -73,8 +70,12 @@ public class Conexion {
         return total;
     }
 
-    //----------------------------------------------------------
-    public String obtenerId(String email) {
+    /**
+     * METODO QUE COGE EL ID DE UN USUARIO
+     * @param email
+     * @return 
+     */
+    public String obtenerIdUsuario(String email) {
         this.abrirConexion();
         String id ="";
         //OBTENEMOS EL ID DE UN USUARIO A TRAVÉS DEL EMAIL
@@ -91,7 +92,12 @@ public class Conexion {
         return id;
     }
     
-    public synchronized void activarUsuario(String email, int activado){
+    /**
+     * METODO QUE ACTIVA O DESACTIVA UN USUARIO
+     * @param email
+     * @param activado 
+     */
+    public void activarUsuario(String email, int activado){
         try {
             this.abrirConexion();
             if(activado == 0){
@@ -107,10 +113,14 @@ public class Conexion {
         }
     }
     
+    /**
+     * METODO QUE ACTUALIZA UN USUARIO CON LOS DATOS QUE RECIBE
+     * @param usuario
+     * @param id 
+     */
     public synchronized void actualizarUsuario (Usuario usuario, String id){
         try {
             
-            int tipo ;
             this.abrirConexion();
             
             String update1 = "UPDATE USUARIOS SET NOMBRE = '"+usuario.getNombre()+"' , "
@@ -128,7 +138,11 @@ public class Conexion {
         }
     }
     
-    //----------------------------------------------------------
+    /**
+     * METODO QUE RECOGE SI UN USUARIO ES USER O ADMIN
+     * @param id
+     * @return 
+     */
     public String obtenerTipoUser(String id){
         
             
@@ -154,7 +168,11 @@ public class Conexion {
         
     }
 
-    //----------------------------------------------------------
+    /**
+     * METODO QUE COMPRUEBA SI UN USUARIO ESTA ACTIVADO O NO
+     * @param id
+     * @return 
+     */
     public int isActivado(String id){
         
             
@@ -162,7 +180,7 @@ public class Conexion {
         
 
         this.abrirConexion();
-        //CONSULTA QUE DEVUELVE SI UN USUARIO ES ADMIN O USER
+        
         String Sentencia ="SELECT ACTIVADO FROM USUARIOS WHERE ID = "+id;
             
         try{    
@@ -178,8 +196,12 @@ public class Conexion {
         
     }    
     
-    //----------------------------------------------------------
-    public int insertarUsuario(Usuario u) {
+    /**
+     * METODO QUE INSERTA UN USURIO
+     * @param u
+     * @return 
+     */
+    public  int insertarUsuario(Usuario u) {
        int cont = 0;
        int contS = 0;
         try {
@@ -190,7 +212,7 @@ public class Conexion {
                 
                 contS++;
             }
-           // System.out.println("select"+contS);
+           
             if(contS == 0){
             
                 String Sentencia = "INSERT INTO " + Constantes.TablaUsuario + "(nombre, apellidos,email,contraseña, activado) VALUES ( '" + u.getNombre() + "'," + "'" + u.getApellidos() + "','" + u.getEmail() +"','"+u.getContraseña()+"',"+u.getActivado()+ ")";
@@ -212,7 +234,12 @@ public class Conexion {
     }
     
     
-    //----------------------------------------------------------
+    /**
+     * METODO QUE INSERTA EL ROL DEL USUARIO
+     * @param idU
+     * @param idR
+     * @return 
+     */
     public int insertarRol(int idU, int idR) {
        int cont = 0;
         try {
@@ -236,8 +263,13 @@ public class Conexion {
     }
     
     
-     //----------------------------------------------------------
-    public int insertarPreferencia(String idU, Preferencias p) {
+     /**
+      * METODO QUE INSERTA LAS PREFERENCIAS DE UN USUARIO
+      * @param idU
+      * @param p
+      * @return 
+      */
+     public  int insertarPreferencia(String idU, Preferencias p) {
        int cont = 0;
         try {
             this.abrirConexion();
@@ -260,10 +292,14 @@ public class Conexion {
         
     }
     
+    /**
+     * METODO QUE ELIMINA TODO EL RASTRO QUE PUEDA EXISTIR DE UN USUARIO
+     * @param email 
+     */
     public synchronized void eliminarUsuario (String email){
         try {
             //PRIMERO OBTENEMOS EL ID DE ESE USUARIO 
-            String id = obtenerId(email);
+            String id = obtenerIdUsuario(email);
             this.abrirConexion();
             String borrarLikes = "DELETE FROM LIKES WHERE IDUSER1 = "+id;
             Sentencia_SQL.executeUpdate(borrarLikes);
@@ -287,8 +323,15 @@ public class Conexion {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    //----------------------------------------------------------
-    public ArrayList obtenerUsuariosTablaArrayList(String id, int tipo) {
+    
+    /**
+     * METODO QUE OBTIENE LOS USUARIOS QUE NO SON ADMIN SI EL TIPO ES DISTINTO DE 0
+     * SI EL TIPO ES 0 OBTIENE TODOS LOS USUARIOS (ADMIN Y USER)
+     * @param id
+     * @param tipo
+     * @return 
+     */
+    public ArrayList obtenerListaUsuarios(String id, int tipo) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
         String Sentencia ="";
@@ -317,6 +360,11 @@ public class Conexion {
         return lp;
     }
     
+    /**
+     * METODO QUE COGE UN USUARIO EN FUNCION DEL ID QUE LE PASEMOS
+     * @param id
+     * @return 
+     */
     public Usuario cogerUsuario (String id){
         Usuario u = null;
         try {
@@ -336,6 +384,12 @@ public class Conexion {
         return u;
         
     }
+    
+    /**
+     * METODO QUE ACTUALIZA LOS PRIVILEGIOS DE UN USUARIO ADMIN
+     * @param p
+     * @param id 
+     */
      public synchronized void actualizarPrivilegios (Privilegios p, String id){
         try {
             
@@ -357,8 +411,13 @@ public class Conexion {
         }
     }
      
-     //----------------------------------------------------------
-    public int insertarPrivilegios(String id) {
+    /**
+     * METODO QUE INSERTA LOS PRIVILEGIOS A UN ADMIN 
+     * INICIALMENTE SOLO PODRA ACTIVAR Y DESACTIVAR USUARIOS
+     * @param id
+     * @return 
+     */
+    public  int insertarPrivilegios(String id) {
        int cont = 0;
         try {
             this.abrirConexion();
@@ -381,6 +440,11 @@ public class Conexion {
         
     }
     
+    /**
+     * METODO QUE RECOGE LOS PRIVILEGIOS QUE TIENE UN USUARIO ADMIN
+     * @param id
+     * @return 
+     */
      public Privilegios cogerPrivilegios (String id){
         Privilegios u = null;
         try {
@@ -403,6 +467,11 @@ public class Conexion {
         
     }
      
+     /**
+      * METODO QUE RECOGE LAS PREFERENCIAS QUE TIENE UN USUARIO
+      * @param id
+      * @return 
+      */
      public Preferencias cogerPreferencias (String id){
         Preferencias p = null;
         try {
@@ -425,6 +494,11 @@ public class Conexion {
         
     }
     
+     /**
+      * METODO QUE ACTUALIZA LAS PREFERENCIAS DE UN USUARIO
+      * @param p
+      * @param id 
+      */
      public synchronized void actualizarPreferencias (Preferencias p, String id){
         try {
             
@@ -448,24 +522,17 @@ public class Conexion {
         }
     }
     
-    //----------------------------------------------------------
-    public ArrayList obtenerUsuariosTablaGustosArrayList(String id, Preferencias p) {
+    /**
+     * METODO QUE RECOGE UNA LISTA DE USUARIOS EN FUNCIO LAS PREFERENCIAS QUE TENEMOS
+     * @param id
+     * @param p
+     * @return 
+     */
+    public ArrayList listaUsuariosGustos(String id, Preferencias p) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
         try {
-            /*
-            SELECT USUARIOS.nombre, usuarios.apellidos
-            FROM usuarios, preferencias
-            WHERE usuarios.id = preferencias.idUser
-            AND usuarios.id <> 61
-            AND preferencias.interes ='HOMBRES'
-            AND preferencias.relacion = 'ESPORADICA'
-            AND preferencias.hijos = 'QUIERE'
-            AND preferencias.deporte BETWEEN 40 AND 60
-            AND preferencias.politica BETWEEN 10 AND 30
-            AND preferencias.arte BETWEEN 50 AND 70
-
-            */
+            
             String interes = p.getInteres();
             if(interes.equals("Mujeres")){
                 interes = "Hombres";
@@ -504,7 +571,13 @@ public class Conexion {
         return lp;
     }
     
-     //----------------------------------------------------------
+     
+    /**
+     * METODO QUE INSERTA UN LIKE QUE HACE UN USUARIO A OTRO USUARIO
+     * @param idUser
+     * @param idLike
+     * @return 
+     */
     public int insertarLike(String idUser, String idLike) {
        int cont = 0;
         try {
@@ -529,14 +602,21 @@ public class Conexion {
     }
     
       
-     //----------------------------------------------------------
-    public ArrayList obtenerUsuariosLikesTablaArrayList(String id, int tipo) {
+     /**
+      * METODO QUE DEVUELVE UNA LISTA DE LOS USUARIOS QUE LES GUSTO SI EL TIPO ES 0
+      * SI EL TIPO ES DISTINTO DE 0 DEVUELVE UNA LISTA DE LOS USUARIOS QUE ME GUSTAN A MI
+      * @param id
+      * @param tipo
+      * @return 
+      */
+    public ArrayList listaUsuariosLikes(String id, int tipo) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
         ArrayList lista = new ArrayList() ;
         String Sentencia ="";
         try {
 
+            //PRIMERO BUSCAMOS LOS ID DE LOS USUARIOS
             if(tipo == 0){
                 Sentencia ="SELECT idUser2 FROM LIKES "
                         +"WHERE idUser1 = "+id;
@@ -547,10 +627,12 @@ public class Conexion {
             }
             Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
 
+            //Y LOS VAMOS ALMACENANDO EN EL ARRAY
             while (Conj_Registros.next()) {
                 lp.add(Conj_Registros.getInt(1));
             }
             
+            //DESPUES VAMOS RECOGIENDO LA INFORMACION DE CADA USUARIO
             for (int i = 0; i < lp.size(); i++) {
                 Sentencia = "SELECT nombre, apellidos, email "+
                             "FROM USUARIOS "+
@@ -569,7 +651,11 @@ public class Conexion {
     }
     
     
-    //----------------------------------------------------------
+    /**
+     * METODO QUE OBTIENE LOS AMIGOS QUE TENEMOS
+     * @param id
+     * @return 
+     */
     public ArrayList obtenerAmigos(String id) {
         this.abrirConexion();
         ArrayList lp = new ArrayList();
@@ -577,14 +663,17 @@ public class Conexion {
         String Sentencia ="";
         try {
 
+            //PRIMERO OBTENEMOS LOS ID DE LOS AMIGOS QUE TENEMOS
             Sentencia ="SELECT idUser2 FROM AMIGOS "
                         +"WHERE idUser1 = "+id;
             Conj_Registros = Sentencia_SQL.executeQuery(Sentencia);
 
+            //LOS AÑADIMOS AL ARRAY
             while (Conj_Registros.next()) {
                 lp.add(Conj_Registros.getInt(1));
             }
             
+            //VAMOS RECOGIENDO SU INFORMACION
             for (int i = 0; i < lp.size(); i++) {
                 Sentencia = "SELECT nombre, apellidos, email "+
                             "FROM USUARIOS "+
@@ -602,6 +691,12 @@ public class Conexion {
         return lista;
     }
     
+    /**
+     * METODO QUE COMPRUEBA SI UN USUARIO LE GUSTA OTRO
+     * @param id
+     * @param like
+     * @return 
+     */
     public int seGustan (String id, String like){
        int cont = 0;
        String sentencia ="";
@@ -628,6 +723,11 @@ public class Conexion {
     }
       
       
+    /**
+     * METODO QUE QUITA UN LIKE
+     * @param id
+     * @param like 
+     */
       public synchronized void borrarLike (String id, String like){
   
         try {
@@ -646,7 +746,13 @@ public class Conexion {
         
     }
       
-      //----------------------------------------------------------
+      /**
+       * METODO PARA HACERSE AMIGOS
+       * PRIMERO COMPRUEBA SI YA LO SON, SI NO LO SON, SE HACEN LOS INSERT
+       * @param id
+       * @param like
+       * @return 
+       */
     public int hacerseAmigos(String id, String like) {
        int cont = 0;
        int contS = 0;
@@ -681,7 +787,7 @@ public class Conexion {
     //---------------------------------------------------------
     public void cerrarConexion() {
         try {
-            // resultado.close();
+            
             this.Conex.close();
             System.out.println("Desconectado de la Base de Datos"); // Opcional para seguridad
         } catch (SQLException ex) {
