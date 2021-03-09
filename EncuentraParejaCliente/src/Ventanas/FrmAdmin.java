@@ -52,16 +52,16 @@ public class FrmAdmin extends javax.swing.JFrame {
         setIconImage(imgIcon);
        
          
-        Image fot = new ImageIcon(getClass().getResource("/Imagenes/addUser.png")).getImage();
+        Image fot = new ImageIcon(getClass().getResource("/Imagenes/anadirUsuario.png")).getImage();
         Icon icono = new ImageIcon(fot.getScaledInstance(btnAdd.getWidth(), btnAdd.getHeight(), Image.SCALE_DEFAULT));
         btnAdd.setIcon(icono);
         
         
-        Image priv = new ImageIcon(getClass().getResource("/Imagenes/cambiar.jpg")).getImage();
+        Image priv = new ImageIcon(getClass().getResource("/Imagenes/cambiar.png")).getImage();
         Icon icono1 = new ImageIcon(priv.getScaledInstance(btnPrivilegios.getWidth(), btnPrivilegios.getHeight(), Image.SCALE_DEFAULT));
         btnPrivilegios.setIcon(icono1);
         
-        //Privilegios p = (Privilegios) Utilidades.Util.recibirObjeto(servidor);
+        
         Privilegios p = (Privilegios) Utilidades.Util.desencriptarObjeto((SealedObject)Utilidades.Util.recibirObjeto(servidor), (PrivateKey) claves[0]);
         
         if(p.getActivar() == 0){
@@ -182,6 +182,8 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnAdd.setBackground(new java.awt.Color(255, 255, 255));
+        btnAdd.setBorder(null);
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -189,6 +191,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         });
 
         btnPrivilegios.setBackground(new java.awt.Color(255, 255, 255));
+        btnPrivilegios.setBorder(null);
         btnPrivilegios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrivilegiosActionPerformed(evt);
@@ -215,15 +218,15 @@ public class FrmAdmin extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(90, 90, 90))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(btnPrivilegios, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnPrivilegios, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(35, 35, 35)
@@ -233,10 +236,10 @@ public class FrmAdmin extends javax.swing.JFrame {
                     .addComponent(btnMod)
                     .addComponent(btnActivar)
                     .addComponent(btnEliminar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnPrivilegios, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 

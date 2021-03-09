@@ -125,6 +125,7 @@ public class FrmPreferencias extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(204, 153, 255));
 
@@ -147,7 +148,7 @@ public class FrmPreferencias extends javax.swing.JFrame {
         jrbSeria.setText("Seria:");
 
         groupRelacion.add(jrbEsporadica);
-        jrbEsporadica.setText("Esporadica");
+        jrbEsporadica.setText("Esporádica");
 
         groupHijos.add(jrbTiene);
         jrbTiene.setText("Tiene");
@@ -324,7 +325,7 @@ public class FrmPreferencias extends javax.swing.JFrame {
                 boolean insertado = dis.readBoolean();
 
                 if(insertado){
-                    JOptionPane.showMessageDialog(null, "Preferencias Insertadas", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Preferencias Insertadas, ahora debe esperar a ser Activado por un administrador", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                     System.exit(0);
                 }else{
                     JOptionPane.showMessageDialog(null, "Ha ocurrido algún error", "Informacion", JOptionPane.ERROR_MESSAGE);

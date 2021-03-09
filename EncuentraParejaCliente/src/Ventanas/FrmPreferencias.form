@@ -11,6 +11,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="undecorated" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -212,7 +213,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="groupRelacion"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Esporadica"/>
+            <Property name="text" type="java.lang.String" value="Espor&#xe1;dica"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSpinner" name="jsDeporte">

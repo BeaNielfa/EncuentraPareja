@@ -14,6 +14,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -43,6 +44,32 @@ public class FrmInicio extends javax.swing.JFrame {
         //Icono
         Image imgIcon = new ImageIcon (getClass().getResource("/Imagenes/ico.png")).getImage();
         setIconImage(imgIcon);
+        
+        Image priv = new ImageIcon(getClass().getResource("/Imagenes/usuario.png")).getImage();
+        Icon icono1 = new ImageIcon(priv.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_DEFAULT));
+        lblFoto.setIcon(icono1);
+        
+        
+        
+        Image amigos = new ImageIcon(getClass().getResource("/Imagenes/botonAmigos.png")).getImage();
+        Icon iconoAmigos = new ImageIcon(amigos.getScaledInstance(btnAmigos.getWidth(), btnAmigos.getHeight(), Image.SCALE_DEFAULT));
+        btnAmigos.setIcon(iconoAmigos);
+
+                
+        Image users = new ImageIcon(getClass().getResource("/Imagenes/allUsers.png")).getImage();
+        Icon iconoUsers = new ImageIcon(users.getScaledInstance(btnUsuarios.getWidth(), btnUsuarios.getHeight(), Image.SCALE_DEFAULT));
+        btnUsuarios.setIcon(iconoUsers);
+        
+        
+        Image like = new ImageIcon(getClass().getResource("/Imagenes/LikeDislike.png")).getImage();
+        Icon iconoLike = new ImageIcon(like.getScaledInstance(btnLike.getWidth(), btnLike.getHeight(), Image.SCALE_DEFAULT));
+        btnLike.setIcon(iconoLike);
+        
+        
+        Image list = new ImageIcon(getClass().getResource("/Imagenes/listaLikes.png")).getImage();
+        Icon iconList = new ImageIcon(list.getScaledInstance(btnListaLikes.getWidth(), btnListaLikes.getHeight(), Image.SCALE_DEFAULT));
+        btnListaLikes.setIcon(iconList);
+        
         
         ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
         
@@ -86,8 +113,10 @@ public class FrmInicio extends javax.swing.JFrame {
         btnPreferencias = new javax.swing.JButton();
         btnAmigos = new javax.swing.JButton();
         btnListaLikes = new javax.swing.JButton();
+        lblFoto = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -113,7 +142,8 @@ public class FrmInicio extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tabla);
 
         btnUsuarios.setBackground(new java.awt.Color(255, 255, 255));
-        btnUsuarios.setText("Usuarios");
+        btnUsuarios.setToolTipText("Lista todos Usuarios");
+        btnUsuarios.setBorder(null);
         btnUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUsuariosActionPerformed(evt);
@@ -121,7 +151,8 @@ public class FrmInicio extends javax.swing.JFrame {
         });
 
         btnLike.setBackground(new java.awt.Color(255, 255, 255));
-        btnLike.setText("Me gusta/No me gusta");
+        btnLike.setToolTipText("Me gusta o No me gusta");
+        btnLike.setBorder(null);
         btnLike.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLikeActionPerformed(evt);
@@ -135,7 +166,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
-        btnPreferencias.setText("Preferencias");
+        btnPreferencias.setText("Mis Preferencias");
         btnPreferencias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPreferenciasActionPerformed(evt);
@@ -143,7 +174,8 @@ public class FrmInicio extends javax.swing.JFrame {
         });
 
         btnAmigos.setBackground(new java.awt.Color(255, 255, 255));
-        btnAmigos.setText("Amigos");
+        btnAmigos.setToolTipText("Lista Amigos");
+        btnAmigos.setBorder(null);
         btnAmigos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAmigosActionPerformed(evt);
@@ -151,7 +183,8 @@ public class FrmInicio extends javax.swing.JFrame {
         });
 
         btnListaLikes.setBackground(new java.awt.Color(255, 255, 255));
-        btnListaLikes.setText("Lista Likes");
+        btnListaLikes.setToolTipText("Lista de Likes");
+        btnListaLikes.setBorder(null);
         btnListaLikes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnListaLikesActionPerformed(evt);
@@ -163,51 +196,54 @@ public class FrmInicio extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(btnAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnPreferencias)
-                        .addGap(28, 28, 28)
-                        .addComponent(btnPerfil))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnListaLikes, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(46, 46, 46)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPreferencias, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                            .addComponent(btnPerfil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(34, 34, 34)
+                        .addComponent(jScrollPane1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(167, 167, 167)
-                        .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(195, 195, 195)
+                        .addComponent(btnAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(btnListaLikes, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(137, 137, 137)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(24, 24, 24)
                 .addComponent(jLabel1)
-                .addGap(52, 52, 52)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnUsuarios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnListaLikes, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnPreferencias)
+                        .addGap(19, 19, 19)
+                        .addComponent(btnPerfil))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPerfil)
-                    .addComponent(btnPreferencias))
-                .addGap(29, 29, 29))
+                    .addComponent(btnAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(btnListaLikes, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -218,9 +254,7 @@ public class FrmInicio extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -355,6 +389,7 @@ public class FrmInicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblFoto;
     private javax.swing.JTable tabla;
     // End of variables declaration//GEN-END:variables
 }

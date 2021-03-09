@@ -15,6 +15,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -37,7 +38,9 @@ public class FrmListaLikes extends javax.swing.JFrame {
         this.servidor = servidor;
         this.claves = claves;
         this.serverKey = serverKey;
-        //this.id = id;
+        
+        
+        
         
         //Centra la ventana en el monitor
         setLocationRelativeTo(null);
@@ -45,6 +48,19 @@ public class FrmListaLikes extends javax.swing.JFrame {
         //Icono
         Image imgIcon = new ImageIcon (getClass().getResource("/Imagenes/ico.png")).getImage();
         setIconImage(imgIcon);
+        
+        
+        Image priv = new ImageIcon(getClass().getResource("/Imagenes/botonLike.png")).getImage();
+        Icon icono1 = new ImageIcon(priv.getScaledInstance(btnLike.getWidth(), btnLike.getHeight(), Image.SCALE_DEFAULT));
+        btnLike.setIcon(icono1);
+       
+        Image volver = new ImageIcon(getClass().getResource("/Imagenes/volver.png")).getImage();
+        Icon iconoVolver = new ImageIcon(volver.getScaledInstance(btnVolver.getWidth(), btnVolver.getHeight(), Image.SCALE_DEFAULT));
+        btnVolver.setIcon(iconoVolver);
+        
+        Image disLike = new ImageIcon(getClass().getResource("/Imagenes/botonDislike.png")).getImage();
+        Icon iconoDislike = new ImageIcon(disLike.getScaledInstance(btnNoGusta.getWidth(), btnNoGusta.getHeight(), Image.SCALE_DEFAULT));
+        btnNoGusta.setIcon(iconoDislike);
        
         ArrayList lu = (ArrayList) Utilidades.Util.recibirObjeto(servidor);
         
@@ -157,21 +173,21 @@ public class FrmListaLikes extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel2.setText("Usuarios que les gusto");
 
-        btnNoGusta.setText("No me gusta");
+        btnNoGusta.setBorder(null);
         btnNoGusta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNoGustaActionPerformed(evt);
             }
         });
 
-        btnLike.setText("Me gusta");
+        btnLike.setBorder(null);
         btnLike.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLikeActionPerformed(evt);
             }
         });
 
-        btnVolver.setText("VOLVER");
+        btnVolver.setBorder(null);
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVolverActionPerformed(evt);
@@ -195,15 +211,15 @@ public class FrmListaLikes extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(112, 112, 112))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(176, 176, 176)
-                .addComponent(btnNoGusta)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnLike)
-                .addGap(190, 190, 190))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnVolver)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(179, 179, 179)
+                .addComponent(btnNoGusta, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(174, 174, 174))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,13 +232,17 @@ public class FrmListaLikes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLike)
-                    .addComponent(btnNoGusta))
-                .addGap(49, 49, 49)
-                .addComponent(btnVolver)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnNoGusta, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 110, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
