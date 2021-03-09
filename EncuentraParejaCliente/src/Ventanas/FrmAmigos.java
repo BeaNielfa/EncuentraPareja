@@ -14,6 +14,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -42,6 +43,10 @@ public class FrmAmigos extends javax.swing.JFrame {
         //Icono
         Image imgIcon = new ImageIcon (getClass().getResource("/Imagenes/ico.png")).getImage();
         setIconImage(imgIcon);
+        
+        Image volver = new ImageIcon(getClass().getResource("/Imagenes/volver.png")).getImage();
+        Icon iconoVolver = new ImageIcon(volver.getScaledInstance(btnVolver.getWidth(), btnVolver.getHeight(), Image.SCALE_DEFAULT));
+        btnVolver.setIcon(iconoVolver);
         
         DataOutputStream dos = new DataOutputStream(servidor.getOutputStream());
         dos.writeBoolean(true);
@@ -112,7 +117,7 @@ public class FrmAmigos extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tabla);
 
-        btnVolver.setText("VOLVER");
+        btnVolver.setBorder(null);
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVolverActionPerformed(evt);
@@ -130,7 +135,7 @@ public class FrmAmigos extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(69, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnVolver)
+                    .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(67, 67, 67))
         );
@@ -141,9 +146,9 @@ public class FrmAmigos extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(45, 45, 45)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                .addComponent(btnVolver)
-                .addGap(34, 34, 34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
